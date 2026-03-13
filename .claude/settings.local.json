@@ -5,7 +5,10 @@
       "Bash(cd \"D:\\\\Rodrigo\\\\Documents\\\\Desarrollos NodeJS\\\\Challenge-Dumas\\\\backend\" && npx prisma migrate dev --name add-user-model 2>&1)",
       "Bash(cd \"D:\\\\Rodrigo\\\\Documents\\\\Desarrollos NodeJS\\\\Challenge-Dumas\\\\backend\" && npx prisma generate 2>&1)",
       "Bash(cd \"D:/Rodrigo/Documents/Desarrollos NodeJS/Challenge-Dumas/frontend\" && npm install bootstrap @ng-bootstrap/ng-bootstrap @fortawesome/fontawesome-svg-core @fortawesome/free-solid-svg-icons @fortawesome/free-regular-svg-icons @fortawesome/angular-fontawesome 2>&1 | tail -10)",
-      "Bash(cd \"D:/Rodrigo/Documents/Desarrollos NodeJS/Challenge-Dumas/frontend\" && npm install bootstrap @ng-bootstrap/ng-bootstrap @fortawesome/fontawesome-svg-core @fortawesome/free-solid-svg-icons @fortawesome/free-regular-svg-icons @fortawesome/angular-fontawesome --legacy-peer-deps 2>&1 | tail -10)"
+      "Bash(cd \"D:/Rodrigo/Documents/Desarrollos NodeJS/Challenge-Dumas/frontend\" && npm install bootstrap @ng-bootstrap/ng-bootstrap @fortawesome/fontawesome-svg-core @fortawesome/free-solid-svg-icons @fortawesome/free-regular-svg-icons @fortawesome/angular-fontawesome --legacy-peer-deps 2>&1 | tail -10)",
+      "Bash(cd \"D:\\\\Rodrigo\\\\Documents\\\\Desarrollos NodeJS\\\\Challenge-Dumas\\\\backend\" && npm test -- --coverage --testPathPattern=\"users.service.spec|auth.service.spec|auth.controller.spec|jwt-auth.guard.spec|get-user.decorator.spec\" 2>&1)",
+      "Bash(cd \"D:\\\\Rodrigo\\\\Documents\\\\Desarrollos NodeJS\\\\Challenge-Dumas\\\\backend\" && npx jest --coverage --testPathPatterns=\"users.service.spec|auth.service.spec|auth.controller.spec|jwt-auth.guard.spec|get-user.decorator.spec\" 2>&1)",
+      "Bash(cd \"D:\\\\Rodrigo\\\\Documents\\\\Desarrollos NodeJS\\\\Challenge-Dumas\\\\frontend\" && npm test -- --watch=false 2>&1)"
     ]
   }
 }
