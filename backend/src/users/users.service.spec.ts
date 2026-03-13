@@ -73,7 +73,10 @@ describe('UsersService', () => {
 
       const result = await service.findByEmail('a@b.com');
 
-      expect(mockPrismaService.user.findUnique).toHaveBeenCalledWith({ where: { email: 'a@b.com' } });
+      expect(mockPrismaService.user.findUnique).toHaveBeenCalledWith({
+        where: { email: 'a@b.com' },
+        select: { id: true, email: true, password: true },
+      });
       expect(result).toEqual(user);
     });
 
