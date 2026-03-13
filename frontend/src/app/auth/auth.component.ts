@@ -1,24 +1,21 @@
 import { Component, signal } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
-import { FaIconComponent } from '@fortawesome/angular-fontawesome';
-import { faStarOfLife, faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from '../core/services/auth.service';
 
 @Component({
   selector: 'app-auth',
   standalone: true,
-  imports: [ReactiveFormsModule, NgbAlert, FaIconComponent],
+  imports: [ReactiveFormsModule, NgbAlert],
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.scss',
 })
 export class AuthComponent {
-  faStarOfLife = faStarOfLife;
-  faCircleQuestion = faCircleQuestion;
-
   activeTab = signal<'login' | 'register'>('login');
   isLoading = signal(false);
   errorMessage = signal<string | null>(null);
+  loginSubmitted = signal(false);
+  registerSubmitted = signal(false);
 
   loginForm: FormGroup;
   registerForm: FormGroup;
@@ -40,12 +37,19 @@ export class AuthComponent {
     });
   }
 
+  get lEmail() { return this.loginForm.get('email'); }
+  get lPassword() { return this.loginForm.get('password'); }
+  get rFullName() { return this.registerForm.get('fullName'); }
+  get rEmail() { return this.registerForm.get('email'); }
+  get rPassword() { return this.registerForm.get('password'); }
+
   switchTab(tab: 'login' | 'register'): void {
     this.activeTab.set(tab);
     this.errorMessage.set(null);
   }
 
   onLogin(): void {
+    this.loginSubmitted.set(true);
     if (this.loginForm.invalid) return;
     this.isLoading.set(true);
     this.errorMessage.set(null);
@@ -59,6 +63,7 @@ export class AuthComponent {
   }
 
   onRegister(): void {
+    this.registerSubmitted.set(true);
     if (this.registerForm.invalid) return;
     this.isLoading.set(true);
     this.errorMessage.set(null);

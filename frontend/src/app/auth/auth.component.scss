@@ -35,6 +35,10 @@ $c-footer-bg: #f8fafc;
   font-weight: 700;
 }
 
+.nav-underline .nav-link:not(.active) {
+  color: $c-muted;
+}
+
 .auth-footer {
   background: $c-footer-bg;
   font-size: 11px;

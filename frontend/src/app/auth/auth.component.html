@@ -3,141 +3,170 @@
        [style.max-width]="activeTab() === 'register' ? '480px' : '448px'"
        style="width: 100%">
 
-    <!-- Logo header (Register only) -->
-    @if (activeTab() === 'register') {
-      <div class="d-flex align-items-center justify-content-between px-4 pt-4 pb-2">
-        <div class="d-flex align-items-center gap-2 fw-bold fs-5" style="color: #0f172a">
-          <fa-icon [icon]="faStarOfLife" />
-          <span>DUMAS APP</span>
-        </div>
-        <fa-icon [icon]="faCircleQuestion" style="color: #94a3b8; cursor: pointer" />
-      </div>
-    }
-
     <!-- Tab navigation -->
-    <div class="d-flex border-bottom px-4 pt-3">
-      <button
-        class="auth-tab bg-transparent border-0"
-        [class.auth-tab--active]="activeTab() === 'login'"
-        (click)="switchTab('login')">
-        Ingresar
-      </button>
-      <button
-        class="auth-tab bg-transparent border-0"
-        [class.auth-tab--active]="activeTab() === 'register'"
-        (click)="switchTab('register')">
-        Registrarse
-      </button>
-    </div>
+    <ul class="nav nav-underline nav-fill py-2">
+      <li class="nav-item">
+        <button
+          class="nav-link"
+          [class.active]="activeTab() === 'login'"
+          (click)="switchTab('login')">
+          Ingresar
+        </button>
+      </li>
+      <li class="nav-item">
+        <button
+          class="nav-link"
+          [class.active]="activeTab() === 'register'"
+          (click)="switchTab('register')">
+          Registrarse
+        </button>
+      </li>
+    </ul>
 
-    <!-- Login form -->
-    @if (activeTab() === 'login') {
-      <div class="px-4 pt-4 pb-2">
-        <h4 class="fw-bold mb-1" style="color: #0f172a">Bienvenido</h4>
-        <p class="text-secondary mb-4" style="font-size: 14px">Por favor ingresa tus credenciales.</p>
+    <div class="tab-content">
 
-        <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
-          <div class="mb-3">
-            <label class="form-label fw-medium" style="font-size: 14px; color: #0f172a">Email</label>
-            <input
-              type="email"
-              class="form-control"
-              placeholder="tu@email.com"
-              formControlName="email" />
-          </div>
-          <div class="mb-3">
-            <label class="form-label fw-medium" style="font-size: 14px; color: #0f172a">Contraseña</label>
-            <input
-              type="password"
-              class="form-control"
-              placeholder="••••••••"
-              formControlName="password" />
-          </div>
+      <!-- Login tab pane -->
+      <div class="tab-pane" [class.active]="activeTab() === 'login'">
+        <div class="px-4 pt-4 pb-2">
+          <h4 class="fw-bold mb-1" style="color: #0f172a">Bienvenido</h4>
+          <p class="text-secondary mb-4" style="font-size: 14px">Por favor ingresa tus credenciales.</p>
 
-          <div class="d-flex align-items-center justify-content-between mb-4">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="remember" formControlName="remember" />
-              <label class="form-check-label" for="remember" style="font-size: 13px">Recordarme</label>
+          <form [formGroup]="loginForm" (ngSubmit)="onLogin()" novalidate>
+            <div class="mb-3">
+              <label class="form-label fw-medium" style="font-size: 14px; color: #0f172a">Email</label>
+              <input
+                type="email"
+                class="form-control"
+                [class.is-invalid]="(loginSubmitted() || lEmail!.touched) && lEmail!.invalid"
+                placeholder="tu@email.com"
+                formControlName="email" />
+              <div class="invalid-feedback">
+                @if (lEmail!.hasError('required')) {
+                  El email es requerido.
+                } @else if (lEmail!.hasError('email')) {
+                  Ingresa un email válido.
+                }
+              </div>
             </div>
-            <a href="#" class="text-decoration-none" style="font-size: 13px; color: #0f172a">¿Olvidaste tu contraseña?</a>
-          </div>
+            <div class="mb-3">
+              <label class="form-label fw-medium" style="font-size: 14px; color: #0f172a">Contraseña</label>
+              <input
+                type="password"
+                class="form-control"
+                [class.is-invalid]="(loginSubmitted() || lPassword!.touched) && lPassword!.invalid"
+                placeholder="••••••••"
+                formControlName="password" />
+              <div class="invalid-feedback">
+                La contraseña es requerida.
+              </div>
+            </div>
 
-          @if (errorMessage()) {
-            <ngb-alert type="danger" [dismissible]="true" (closed)="dismissError()" class="mb-3">
-              {{ errorMessage() }}
-            </ngb-alert>
-          }
+            <div class="d-flex align-items-center justify-content-between mb-4">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="remember" formControlName="remember" />
+                <label class="form-check-label" for="remember" style="font-size: 13px">Recordarme</label>
+              </div>
+              <a href="#" class="text-decoration-none" style="font-size: 13px; color: #0f172a">¿Olvidaste tu contraseña?</a>
+            </div>
 
-          <button
-            type="submit"
-            class="btn btn-dark w-100"
-            [disabled]="isLoading()">
-            @if (isLoading()) {
-              <span class="spinner-border spinner-border-sm me-2" role="status"></span>
-            } @else {
-              Login
+            @if (errorMessage()) {
+              <ngb-alert type="danger" [dismissible]="true" (closed)="dismissError()" class="mb-3">
+                {{ errorMessage() }}
+              </ngb-alert>
             }
-          </button>
-        </form>
+
+            <button
+              type="submit"
+              class="btn btn-dark w-100"
+              [disabled]="isLoading()">
+              @if (isLoading()) {
+                <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+              } @else {
+                Login
+              }
+            </button>
+          </form>
+        </div>
       </div>
-    }
 
-    <!-- Register form -->
-    @if (activeTab() === 'register') {
-      <div class="px-4 pt-4 pb-2">
-        <h4 class="fw-bold mb-1" style="color: #0f172a">Crea una cuenta</h4>
-        <p class="text-secondary mb-4" style="font-size: 14px">Únete a nuestra comunidad hoy mismo</p>
+      <!-- Register tab pane -->
+      <div class="tab-pane" [class.active]="activeTab() === 'register'">
+        <div class="px-4 pt-4 pb-2">
+          <h4 class="fw-bold mb-1" style="color: #0f172a">Crea una cuenta</h4>
+          <p class="text-secondary mb-4" style="font-size: 14px">Únete a nuestra comunidad hoy mismo</p>
 
-        <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
-          <div class="mb-3">
-            <label class="form-label fw-medium" style="font-size: 14px; color: #0f172a">Nombre completo</label>
-            <input
-              type="text"
-              class="form-control"
-              placeholder="Juan Pérez"
-              formControlName="fullName" />
-          </div>
-          <div class="mb-3">
-            <label class="form-label fw-medium" style="font-size: 14px; color: #0f172a">Email</label>
-            <input
-              type="email"
-              class="form-control"
-              placeholder="tu@email.com"
-              formControlName="email" />
-          </div>
-          <div class="mb-3">
-            <label class="form-label fw-medium" style="font-size: 14px; color: #0f172a">Contraseña</label>
-            <input
-              type="password"
-              class="form-control"
-              placeholder="••••••••"
-              formControlName="password" />
-          </div>
+          <form [formGroup]="registerForm" (ngSubmit)="onRegister()" novalidate>
+            <div class="mb-3">
+              <label class="form-label fw-medium" style="font-size: 14px; color: #0f172a">Nombre completo</label>
+              <input
+                type="text"
+                class="form-control"
+                [class.is-invalid]="(registerSubmitted() || rFullName!.touched) && rFullName!.invalid"
+                placeholder="Juan Pérez"
+                formControlName="fullName" />
+              <div class="invalid-feedback">
+                El nombre es requerido.
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-medium" style="font-size: 14px; color: #0f172a">Email</label>
+              <input
+                type="email"
+                class="form-control"
+                [class.is-invalid]="(registerSubmitted() || rEmail!.touched) && rEmail!.invalid"
+                placeholder="tu@email.com"
+                formControlName="email" />
+              <div class="invalid-feedback">
+                @if (rEmail!.hasError('required')) {
+                  El email es requerido.
+                } @else if (rEmail!.hasError('email')) {
+                  Ingresa un email válido.
+                }
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-medium" style="font-size: 14px; color: #0f172a">Contraseña</label>
+              <input
+                type="password"
+                class="form-control"
+                [class.is-invalid]="(registerSubmitted() || rPassword!.touched) && rPassword!.invalid"
+                placeholder="••••••••"
+                formControlName="password" />
+              <div class="invalid-feedback">
+                @if (rPassword!.hasError('required')) {
+                  La contraseña es requerida.
+                } @else if (rPassword!.hasError('minlength')) {
+                  La contraseña debe tener al menos 6 caracteres.
+                }
+              </div>
+            </div>
 
-          <p class="text-secondary mb-4" style="font-size: 13px">
-            Al registrarte aceptas nuestros
-            <a href="#" class="text-decoration-underline" style="color: #0f172a">Términos y condiciones</a>.
-          </p>
+            <p class="text-secondary mb-4" style="font-size: 13px">
+              Al registrarte aceptas nuestros
+              <a href="#" class="text-decoration-underline" style="color: #0f172a">Términos y condiciones</a>.
+            </p>
 
-          @if (errorMessage()) {
-            <ngb-alert type="danger" [dismissible]="true" (closed)="dismissError()" class="mb-3">
-              {{ errorMessage() }}
-            </ngb-alert>
-          }
-
-          <button
-            type="submit"
-            class="btn btn-dark w-100"
-            [disabled]="isLoading()">
-            @if (isLoading()) {
-              <span class="spinner-border spinner-border-sm me-2" role="status"></span>
-            } @else {
-              Registrarse
+            @if (errorMessage()) {
+              <ngb-alert type="danger" [dismissible]="true" (closed)="dismissError()" class="mb-3">
+                {{ errorMessage() }}
+              </ngb-alert>
             }
-          </button>
-        </form>
+
+            <button
+              type="submit"
+              class="btn btn-dark w-100"
+              [disabled]="isLoading()">
+              @if (isLoading()) {
+                <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+              } @else {
+                Registrarse
+              }
+            </button>
+          </form>
+        </div>
       </div>
-    }
+
+    </div>
 
     <!-- Footer -->
     <div class="auth-footer text-center py-3 mt-4 border-top text-uppercase">
