@@ -24,7 +24,10 @@
       "Bash(cd \"D:\\\\Rodrigo\\\\Documents\\\\Desarrollos NodeJS\\\\Challenge-Dumas\\\\backend\" && npx prisma migrate dev --name add-task-model 2>&1)",
       "Bash(cd \"D:\\\\Rodrigo\\\\Documents\\\\Desarrollos NodeJS\\\\Challenge-Dumas\\\\backend\" && npm test 2>&1)",
       "Bash(cd \"D:/Rodrigo/Documents/Desarrollos NodeJS/Challenge-Dumas/backend\" && npx jest src/tasks/ --verbose 2>&1)",
-      "Bash(cd \"D:/Rodrigo/Documents/Desarrollos NodeJS/Challenge-Dumas/backend\" && npm run test:integration -- --verbose 2>&1)"
+      "Bash(cd \"D:/Rodrigo/Documents/Desarrollos NodeJS/Challenge-Dumas/backend\" && npm run test:integration -- --verbose 2>&1)",
+      "mcp__figma-remote-mcp__get_design_context",
+      "mcp__figma-remote-mcp__get_screenshot",
+      "mcp__figma-remote-mcp__get_metadata"
     ]
   }
 }
