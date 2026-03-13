@@ -57,7 +57,9 @@ export class AuthComponent {
     this.authService.login({ email, password }).subscribe({
       error: (err) => {
         this.isLoading.set(false);
-        this.errorMessage.set(err?.error?.message ?? 'Credenciales inválidas.');
+        console.log(err)
+        if (err.status === 401) this.errorMessage.set('Credenciales no válidas.');
+        else this.errorMessage.set(err?.error?.message ?? 'Credenciales no válidas.');
       },
     });
   }
