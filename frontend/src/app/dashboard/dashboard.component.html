@@ -14,7 +14,7 @@
 
     <!-- Navigation -->
     <nav class="sidebar-nav flex-grow-1 px-3 pt-2">
-      <a class="nav-item active" href="javascript:void(0)">
+      <a class="nav-item active" routerLink="/dashboard">
         <fa-icon [icon]="faTasks" class="nav-icon"></fa-icon>
         <span>Mis Tareas</span>
       </a>
@@ -45,15 +45,8 @@
   <main class="main-content flex-grow-1 d-flex flex-column">
     <!-- Top Bar -->
     <header class="top-bar d-flex align-items-center justify-content-between px-4 border-bottom">
-      <div class="search-box position-relative">
-        <fa-icon [icon]="faSearch" class="search-icon position-absolute"></fa-icon>
-        <input
-          type="text"
-          class="form-control form-control-sm ps-5"
-          placeholder="Buscar tareas, archivos o compañeros..."
-          [ngModel]="searchQuery()"
-          (ngModelChange)="onSearch($event)"
-        />
+      <div class="d-flex align-items-center">
+        <span class="text-muted fw-semibold" style="font-size: 14px;">Panel de Tareas</span>
       </div>
       <div class="d-flex align-items-center gap-3">
         <button class="btn btn-link text-muted position-relative p-0">
@@ -64,188 +57,16 @@
           <fa-icon [icon]="faCog"></fa-icon>
         </button>
         <div class="vr mx-2"></div>
-        <button class="btn btn-accent btn-sm d-flex align-items-center gap-2">
+        <a routerLink="/dashboard/new" class="btn btn-accent btn-sm d-flex align-items-center gap-2">
           <fa-icon [icon]="faPlus" size="sm"></fa-icon>
           <span>Nueva Tarea</span>
-        </button>
+        </a>
       </div>
     </header>
 
-    <!-- Dashboard Content -->
+    <!-- Child Route Content -->
     <div class="dashboard-content p-4 flex-grow-1 overflow-auto">
-      <!-- Welcome Section -->
-      <section class="welcome-section mb-4">
-        <h2 class="fw-bold mb-1">Bienvenido, {{ currentUser()?.fullName }}</h2>
-        <p class="text-muted mb-0">
-          Tienes {{ pendingCount() }} tareas pendientes hoy. Hagamos que sea un día productivo.
-        </p>
-      </section>
-
-      <!-- Stats Cards -->
-      <div class="row g-3 mb-4">
-        <div class="col-md-4">
-          <div class="stat-card card border">
-            <div class="card-body d-flex align-items-center">
-              <div class="stat-icon stat-icon--default">
-                <fa-icon [icon]="faCheckCircle"></fa-icon>
-              </div>
-              <div class="ms-3">
-                <small class="text-muted d-block">Completadas</small>
-                <span class="fw-bold fs-4">{{ completedCount() }} / {{ totalTasks() }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="stat-card card border">
-            <div class="card-body d-flex align-items-center">
-              <div class="stat-icon stat-icon--default">
-                <fa-icon [icon]="faClock"></fa-icon>
-              </div>
-              <div class="ms-3">
-                <small class="text-muted d-block">Pendientes</small>
-                <span class="fw-bold fs-4">{{ pendingCount() }} Tareas</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="stat-card stat-card--accent card">
-            <div class="card-body d-flex align-items-center">
-              <div class="stat-icon stat-icon--accent">
-                <fa-icon [icon]="faChartLine"></fa-icon>
-              </div>
-              <div class="ms-3">
-                <small class="d-block opacity-75">Rendimiento</small>
-                <span class="fw-bold fs-4">{{ completionRate() }}%</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Task Table Section -->
-      <div class="card border task-table-card">
-        <!-- Table Tabs -->
-        <div class="card-header bg-white d-flex align-items-center justify-content-between">
-          <ul class="nav nav-tabs-custom mb-0">
-            <li>
-              <button
-                class="tab-btn"
-                [class.active]="activeTab() === 'all'"
-                (click)="setTab('all')"
-              >
-                Todas
-              </button>
-            </li>
-            <li>
-              <button
-                class="tab-btn"
-                [class.active]="activeTab() === 'pending'"
-                (click)="setTab('pending')"
-              >
-                Pendientes
-              </button>
-            </li>
-            <li>
-              <button
-                class="tab-btn"
-                [class.active]="activeTab() === 'completed'"
-                (click)="setTab('completed')"
-              >
-                Completadas
-              </button>
-            </li>
-          </ul>
-          <button class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1">
-            <fa-icon [icon]="faChevronDown" size="xs"></fa-icon>
-            <span>Filtro</span>
-          </button>
-        </div>
-
-        <!-- Table -->
-        <div class="table-responsive">
-          <table class="table table-hover align-middle mb-0">
-            <thead>
-              <tr>
-                <th class="ps-4" style="width: 60px;">ESTADO</th>
-                <th>NOMBRE DE LA TAREA</th>
-                <th>FECHA LÍMITE</th>
-                <th style="width: 60px;"></th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (task of paginatedTasks(); track task.id) {
-                <tr>
-                  <td class="ps-4">
-                    <input
-                      type="checkbox"
-                      class="form-check-input"
-                      [checked]="task.completed"
-                      (change)="toggleComplete(task)"
-                    />
-                  </td>
-                  <td>
-                    <div class="d-flex align-items-center gap-2">
-                      <span
-                        class="priority-dot"
-                        [class.priority-dot--completed]="task.completed"
-                        [class.priority-dot--pending]="!task.completed"
-                      ></span>
-                      <span [class.text-decoration-line-through]="task.completed" [class.text-muted]="task.completed">
-                        {{ task.title }}
-                      </span>
-                    </div>
-                  </td>
-                  <td class="text-muted">{{ task.dueDate | date:'dd MMM yyyy' }}</td>
-                  <td class="text-end pe-3">
-                    <div class="dropdown">
-                      <button
-                        class="btn btn-sm btn-link text-muted p-0"
-                        data-bs-toggle="dropdown"
-                      >
-                        <fa-icon [icon]="faEllipsisV"></fa-icon>
-                      </button>
-                      <ul class="dropdown-menu dropdown-menu-end">
-                        <li><button class="dropdown-item text-danger" (click)="deleteTask(task)">Eliminar</button></li>
-                      </ul>
-                    </div>
-                  </td>
-                </tr>
-              } @empty {
-                <tr>
-                  <td colspan="4" class="text-center text-muted py-4">
-                    No se encontraron tareas.
-                  </td>
-                </tr>
-              }
-            </tbody>
-          </table>
-        </div>
-
-        <!-- Pagination -->
-        <div class="card-footer bg-white d-flex align-items-center justify-content-between">
-          <small class="text-muted">
-            Mostrando {{ paginatedTasks().length }} de {{ filteredTasks().length }} tareas
-          </small>
-          <div class="d-flex gap-2">
-            <button
-              class="btn btn-sm btn-outline-secondary"
-              [disabled]="currentPage() === 1"
-              (click)="prevPage()"
-            >
-              Anterior
-            </button>
-            <button
-              class="btn btn-sm btn-outline-secondary"
-              [disabled]="currentPage() >= totalPages()"
-              (click)="nextPage()"
-            >
-              Siguiente
-            </button>
-          </div>
-        </div>
-      </div>
+      <router-outlet></router-outlet>
     </div>
   </main>
 </div>

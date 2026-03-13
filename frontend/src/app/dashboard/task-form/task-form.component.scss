@@ -1,0 +1,68 @@
+$accent: #e86c25;
+$accent-dark: #c85a1e;
+$border-color: #e2e8f0;
+
+.form-card {
+  border-radius: 12px;
+  border-color: $border-color;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.form-label {
+  font-size: 14px;
+  color: #334155;
+}
+
+.form-control {
+  border-radius: 12px;
+  border-color: $border-color;
+  font-size: 14px;
+  padding: 12px 16px;
+
+  &:focus {
+    border-color: $accent;
+    box-shadow: 0 0 0 3px rgba($accent, 0.12);
+  }
+
+  &::placeholder {
+    color: #94a3b8;
+  }
+}
+
+.btn-accent {
+  background-color: $accent;
+  border-color: $accent;
+  color: #fff;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 24px;
+  box-shadow: 0 4px 12px rgba($accent, 0.2);
+
+  &:hover:not(:disabled) {
+    background-color: $accent-dark;
+    border-color: $accent-dark;
+    color: #fff;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.tip-box {
+  border-radius: 12px;
+  background-color: rgba($accent, 0.05);
+  border: 1px solid rgba($accent, 0.1);
+}
+
+.tip-icon {
+  color: $accent;
+  font-size: 16px;
+}
+
+.tip-title {
+  color: $accent;
+  font-size: 14px;
+}
