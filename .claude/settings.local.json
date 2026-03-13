@@ -20,7 +20,9 @@
       "Bash(cd \"D:\\\\Rodrigo\\\\Documents\\\\Desarrollos NodeJS\\\\Challenge-Dumas\\\\frontend\" && npm install 2>&1)",
       "Bash(cd \"D:\\\\Rodrigo\\\\Documents\\\\Desarrollos NodeJS\\\\Challenge-Dumas\\\\frontend\" && node -e \"const pkg = require\\('./node_modules/@angular/compiler/package.json'\\); console.log\\(pkg.version\\)\")",
       "Bash(cd \"D:\\\\Rodrigo\\\\Documents\\\\Desarrollos NodeJS\\\\Challenge-Dumas\\\\frontend\" && npm view @angular/localize@20.3.17 peerDependencies --json 2>&1)",
-      "Bash(cd \"D:\\\\Rodrigo\\\\Documents\\\\Desarrollos NodeJS\\\\Challenge-Dumas\\\\frontend\" && rm -rf node_modules package-lock.json && npm install 2>&1)"
+      "Bash(cd \"D:\\\\Rodrigo\\\\Documents\\\\Desarrollos NodeJS\\\\Challenge-Dumas\\\\frontend\" && rm -rf node_modules package-lock.json && npm install 2>&1)",
+      "Bash(cd \"D:\\\\Rodrigo\\\\Documents\\\\Desarrollos NodeJS\\\\Challenge-Dumas\\\\backend\" && npx prisma migrate dev --name add-task-model 2>&1)",
+      "Bash(cd \"D:\\\\Rodrigo\\\\Documents\\\\Desarrollos NodeJS\\\\Challenge-Dumas\\\\backend\" && npm test 2>&1)"
     ]
   }
 }
