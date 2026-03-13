@@ -61,9 +61,9 @@ describe('AuthService', () => {
         .mockResolvedValueOnce('refreshToken');
       mockUsersService.updateRefreshToken.mockResolvedValue(undefined);
 
-      const result = await service.register({ email: 'a@b.com', password: 'secret' });
+      const result = await service.register({ fullName: 'Test User', email: 'a@b.com', password: 'secret' });
 
-      expect(mockUsersService.create).toHaveBeenCalledWith({ email: 'a@b.com', password: 'secret' });
+      expect(mockUsersService.create).toHaveBeenCalledWith({ fullName: 'Test User', email: 'a@b.com', password: 'secret' });
       expect(mockJwtService.signAsync).toHaveBeenCalledTimes(2);
       expect(mockUsersService.updateRefreshToken).toHaveBeenCalledWith('uid1', 'refreshToken');
       expect(result).toEqual({ accessToken: 'accessToken', refreshToken: 'refreshToken', userId: 'uid1' });
@@ -72,7 +72,7 @@ describe('AuthService', () => {
     it('propagates ConflictException without calling updateRefreshToken', async () => {
       mockUsersService.create.mockRejectedValue(new ConflictException('Email already in use'));
 
-      await expect(service.register({ email: 'a@b.com', password: 'secret' })).rejects.toThrow(
+      await expect(service.register({ fullName: 'Test User', email: 'a@b.com', password: 'secret' })).rejects.toThrow(
         ConflictException,
       );
       expect(mockUsersService.updateRefreshToken).not.toHaveBeenCalled();

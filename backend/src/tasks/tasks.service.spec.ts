@@ -44,14 +44,14 @@ describe('TasksService', () => {
   });
 
   describe('create', () => {
-    it('should create a task', async () => {
+    it('should create a task with dueDate converted to Date', async () => {
       const dto = { title: 'Test Task', dueDate: '2026-04-01' };
       prisma.task.create.mockResolvedValue(mockTask);
 
       const result = await service.create(userId, dto);
 
       expect(prisma.task.create).toHaveBeenCalledWith({
-        data: { ...dto, userId },
+        data: { ...dto, dueDate: new Date('2026-04-01'), userId },
       });
       expect(result).toEqual(mockTask);
     });
@@ -92,7 +92,7 @@ describe('TasksService', () => {
   });
 
   describe('update', () => {
-    it('should update a task', async () => {
+    it('should update a task without dueDate', async () => {
       const dto = { title: 'Updated' };
       const updated = { ...mockTask, ...dto };
       prisma.task.findUnique.mockResolvedValue(mockTask);
@@ -102,7 +102,22 @@ describe('TasksService', () => {
 
       expect(prisma.task.update).toHaveBeenCalledWith({
         where: { id: taskId },
-        data: dto,
+        data: { ...dto },
+      });
+      expect(result).toEqual(updated);
+    });
+
+    it('should update a task with dueDate converted to Date', async () => {
+      const dto = { title: 'Updated', dueDate: '2026-12-25' };
+      const updated = { ...mockTask, ...dto, dueDate: new Date('2026-12-25') };
+      prisma.task.findUnique.mockResolvedValue(mockTask);
+      prisma.task.update.mockResolvedValue(updated);
+
+      const result = await service.update(taskId, userId, dto);
+
+      expect(prisma.task.update).toHaveBeenCalledWith({
+        where: { id: taskId },
+        data: { ...dto, dueDate: new Date('2026-12-25') },
       });
       expect(result).toEqual(updated);
     });

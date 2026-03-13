@@ -9,7 +9,7 @@ export class TasksService {
 
   create(userId: string, dto: CreateTaskDto) {
     return this.prisma.task.create({
-      data: { ...dto, userId },
+      data: { ...dto, dueDate: new Date(dto.dueDate), userId },
     });
   }
 
@@ -29,9 +29,12 @@ export class TasksService {
 
   async update(id: string, userId: string, dto: UpdateTaskDto) {
     await this.findOne(id, userId);
+    const data = dto.dueDate
+      ? { ...dto, dueDate: new Date(dto.dueDate) }
+      : { ...dto };
     return this.prisma.task.update({
       where: { id },
-      data: dto,
+      data,
     });
   }
 

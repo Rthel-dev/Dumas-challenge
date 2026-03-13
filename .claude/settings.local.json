@@ -27,7 +27,8 @@
       "Bash(cd \"D:/Rodrigo/Documents/Desarrollos NodeJS/Challenge-Dumas/backend\" && npm run test:integration -- --verbose 2>&1)",
       "mcp__figma-remote-mcp__get_design_context",
       "mcp__figma-remote-mcp__get_screenshot",
-      "mcp__figma-remote-mcp__get_metadata"
+      "mcp__figma-remote-mcp__get_metadata",
+      "Bash(cd \"D:/Rodrigo/Documents/Desarrollos NodeJS/Challenge-Dumas/backend\" && npx prisma migrate dev --name add_fullname_to_user 2>&1)"
     ]
   }
 }

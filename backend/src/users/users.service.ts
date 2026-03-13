@@ -13,7 +13,7 @@ export class UsersService {
 
     const hashed = await bcrypt.hash(dto.password, 12);
     return this.prisma.user.create({
-      data: { email: dto.email, password: hashed },
+      data: { fullName: dto.fullName, email: dto.email, password: hashed },
     });
   }
 
@@ -30,6 +30,13 @@ export class UsersService {
 
   findById(id: string) {
     return this.prisma.user.findUnique({ where: { id } });
+  }
+
+  getProfile(id: string) {
+    return this.prisma.user.findUnique({
+      where: { id },
+      select: { id: true, fullName: true, email: true },
+    });
   }
 
   async updateRefreshToken(userId: string, token: string | null) {

@@ -39,11 +39,11 @@ describe('UsersService', () => {
       mockPrismaService.user.create.mockResolvedValue({ id: '1', email: 'a@b.com' });
       (bcrypt.hash as jest.Mock).mockResolvedValue('hashedPw');
 
-      const result = await service.create({ email: 'a@b.com', password: 'secret' });
+      const result = await service.create({ fullName: 'Test User', email: 'a@b.com', password: 'secret' });
 
       expect(bcrypt.hash).toHaveBeenCalledWith('secret', 12);
       expect(mockPrismaService.user.create).toHaveBeenCalledWith({
-        data: { email: 'a@b.com', password: 'hashedPw' },
+        data: { fullName: 'Test User', email: 'a@b.com', password: 'hashedPw' },
       });
       expect(result).toEqual({ id: '1', email: 'a@b.com' });
     });
@@ -51,7 +51,7 @@ describe('UsersService', () => {
     it('throws ConflictException if email already exists', async () => {
       mockPrismaService.user.findUnique.mockResolvedValue({ id: '1', email: 'a@b.com' });
 
-      await expect(service.create({ email: 'a@b.com', password: 'secret' })).rejects.toThrow(
+      await expect(service.create({ fullName: 'Test User', email: 'a@b.com', password: 'secret' })).rejects.toThrow(
         ConflictException,
       );
     });
@@ -59,7 +59,7 @@ describe('UsersService', () => {
     it('does NOT call create if email is taken', async () => {
       mockPrismaService.user.findUnique.mockResolvedValue({ id: '1', email: 'a@b.com' });
 
-      await expect(service.create({ email: 'a@b.com', password: 'secret' })).rejects.toThrow(
+      await expect(service.create({ fullName: 'Test User', email: 'a@b.com', password: 'secret' })).rejects.toThrow(
         ConflictException,
       );
       expect(mockPrismaService.user.create).not.toHaveBeenCalled();
@@ -104,6 +104,29 @@ describe('UsersService', () => {
       mockPrismaService.user.findUnique.mockResolvedValue(null);
 
       const result = await service.findById('missing');
+
+      expect(result).toBeNull();
+    });
+  });
+
+  describe('getProfile', () => {
+    it('returns id, fullName, and email for the user', async () => {
+      const profile = { id: '1', fullName: 'Test User', email: 'a@b.com' };
+      mockPrismaService.user.findUnique.mockResolvedValue(profile);
+
+      const result = await service.getProfile('1');
+
+      expect(mockPrismaService.user.findUnique).toHaveBeenCalledWith({
+        where: { id: '1' },
+        select: { id: true, fullName: true, email: true },
+      });
+      expect(result).toEqual(profile);
+    });
+
+    it('returns null when user not found', async () => {
+      mockPrismaService.user.findUnique.mockResolvedValue(null);
+
+      const result = await service.getProfile('missing');
 
       expect(result).toBeNull();
     });
