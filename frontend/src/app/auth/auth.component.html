@@ -69,11 +69,11 @@
               <a href="#" class="text-decoration-none" style="font-size: 13px; color: #0f172a">¿Olvidaste tu contraseña?</a>
             </div>
 
-            @if (errorMessage()) {
+            <!-- @if (errorMessage()) { -->
               <ngb-alert type="danger" [dismissible]="true" (closed)="dismissError()" class="mb-3">
                 {{ errorMessage() }}
               </ngb-alert>
-            }
+            <!-- } -->
 
             <button
               type="submit"
