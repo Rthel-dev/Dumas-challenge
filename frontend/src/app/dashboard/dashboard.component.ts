@@ -1,4 +1,4 @@
-import { Component, computed, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -18,6 +18,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from '../core/services/auth.service';
 import { TaskService } from '../core/services/task.service';
+import { UserStoreService } from '../core/services/user-store.service';
 import { Task } from '../core/models/task.models';
 
 export type TabFilter = 'all' | 'pending' | 'completed';
@@ -84,6 +85,10 @@ export class DashboardComponent implements OnInit {
     const total = this.totalTasks();
     return total === 0 ? 0 : Math.round((this.completedCount() / total) * 100);
   });
+
+  // User profile
+  private userStore = inject(UserStoreService);
+  currentUser = this.userStore.currentUser;
 
   constructor(
     public authService: AuthService,

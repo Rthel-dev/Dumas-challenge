@@ -31,8 +31,8 @@
           <fa-icon [icon]="faCheckCircle" class="text-white"></fa-icon>
         </div>
         <div class="flex-grow-1">
-          <small class="d-block text-white fw-semibold">Alex Morgan</small>
-          <small class="text-white-50" style="font-size: 11px;">alex&#64;dumasapp.com</small>
+          <small class="d-block text-white fw-semibold">{{ currentUser()?.fullName }}</small>
+          <small class="text-white-50" style="font-size: 11px;">{{ currentUser()?.email }}</small>
         </div>
         <button class="btn btn-sm text-white-50 p-0" (click)="authService.logout()" title="Cerrar sesión">
           <fa-icon [icon]="faSignOutAlt"></fa-icon>
@@ -75,7 +75,7 @@
     <div class="dashboard-content p-4 flex-grow-1 overflow-auto">
       <!-- Welcome Section -->
       <section class="welcome-section mb-4">
-        <h2 class="fw-bold mb-1">Bienvenido, Alex</h2>
+        <h2 class="fw-bold mb-1">Bienvenido, {{ currentUser()?.fullName }}</h2>
         <p class="text-muted mb-0">
           Tienes {{ pendingCount() }} tareas pendientes hoy. Hagamos que sea un día productivo.
         </p>

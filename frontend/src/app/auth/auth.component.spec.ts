@@ -59,10 +59,10 @@ describe('AuthComponent', () => {
     expect(mockAuthService.register).not.toHaveBeenCalled();
   });
 
-  it('onRegister() with valid form calls authService.register with email and password', () => {
+  it('onRegister() with valid form calls authService.register with fullName, email and password', () => {
     component.registerForm.setValue({ fullName: 'Test User', email: 'a@b.com', password: 'pass123' });
     component.onRegister();
-    expect(mockAuthService.register).toHaveBeenCalledWith({ email: 'a@b.com', password: 'pass123' });
+    expect(mockAuthService.register).toHaveBeenCalledWith({ fullName: 'Test User', email: 'a@b.com', password: 'pass123' });
   });
 
   it('dismissError sets errorMessage to null', () => {
