@@ -39,7 +39,7 @@ nvm alias default 22
 ## Clonar repositorio, instalar dependencias y desplegar en entorno de desarrollo
 Clonar el repositorio e ingresar al directorio de la aplicación:
 ```
-git clone <url_del_repositorio> dumas-app
+git clone https://github.com/Rthel-dev/Dumas-challenge.git dumas-app
 cd dumas-app/frontend
 ```
 Ajustar la dirección de la aplicación backend en el archivo de entorno (opcional):
@@ -77,11 +77,11 @@ ng test --include=src/app/directorio_objetivo
 ### Instalación directa en el servidor
 La siguiente descripción del despliegue de la aplicación se realiza para un servidor Ubuntu 24.04. Para otras versiones de distribución pueden haber diferencias en los comandos indicados. Se considera que ya se encuentran instaladas las dependencias necesarias. Para su instalación, ver la sección [__Instalación__](#instalación).
 
-#### Clonar el repositorio y preconfigurar la aplicación
+#### Clonar el repositorio, preconfigurar y construir la aplicación
 Clonar el repositorio con permisos de superusuario e ingresar al directorio de trabajo. Para ejemplificar se utiliza la carpeta */opt* del sistema:
 ```
 cd /opt
-sudo git clone <url_del_repositorio> dumas-frontend
+sudo git clone https://github.com/Rthel-dev/Dumas-challenge.git dumas-frontend
 ```
 
 Cambiar los permisos de acceso a la carpeta de la aplicación e ingresar al directorio:
@@ -108,9 +108,7 @@ npm install
 npm run build
 ```
 
-#### Instalación como Single Page Application (SPA)
-
-##### Instalación de Nginx
+#### Instalación de Nginx
 Instalar *Nginx* en el servidor:
 ```
 sudo apt update
@@ -127,7 +125,7 @@ Verificar el funcionamiento de Nginx:
 sudo systemctl status nginx
 ```
 
-##### Desplegar la aplicación construida
+#### Desplegar la aplicación construida
 Ingresar a la carpeta de proyecto:
 ```
 cd /opt/dumas-frontend/frontend
@@ -179,7 +177,7 @@ Recargar *Nginx* para aplicar los cambios realizados:
 sudo systemctl reload nginx
 ```
 
-##### Actualizar la aplicación
+#### Actualizar la aplicación
 Para actualizar la aplicación a su versión más reciente, se debe ingresar a la carpeta de la aplicación y ejecutar el siguiente comando:
 ```
 cd /opt/dumas-frontend/frontend
@@ -198,7 +196,7 @@ sudo cp -r dist/frontend/browser/* /var/www/dumas-frontend/
 sudo systemctl reload nginx
 ```
 
-##### Cambiar despliegue a HTTPS
+#### Cambiar despliegue a HTTPS
 Para obtener los certificados SSL del sitio mediante el uso de *Let's Encrypt*, se utiliza su herramienta __Certbot__ para la obtención del certificado. Para ello, se debe instalar *Certbot* junto con el plugin necesario para su uso con *Nginx* con los siguientes comandos:
 ```
 sudo apt update

@@ -76,7 +76,7 @@ psql -d dumasdb
 ### Clonar repositorio e instalar dependencias
 Clonar el repositorio e ingresar al directorio de la aplicación:
 ```
-git clone <url_del_repositorio> dumas-app
+git clone https://github.com/Rthel-dev/Dumas-challenge.git dumas-app
 cd dumas-app/backend
 ```
 Generar archivo de variables de entorno de la aplicación copiando archivo .env.example a .env y editarlo:
@@ -99,7 +99,7 @@ JWT_ACCESS_EXPIRES_IN=15m
 JWT_REFRESH_EXPIRES_IN=7d
 COOKIE_SECURE=false
 
-ALLOWED_ORIGINS='http://localhost:4200'
+ALLOWED_ORIGINS=direcciones_permitidas_separadas_por_coma  ej.: http://localhost:4200,
 PORT=3000
 ```
 Instalar dependencias:
@@ -128,7 +128,7 @@ Instalar *nvm-sh*, *Node.js* y *PostgreSQL* en el servidor siguiendo los mismos 
 ### Configurar la aplicación
 Clonar el repositorio e ingresar al directorio de la aplicación:
 ```
-git clone <url_del_repositorio> dumas-app
+git clone https://github.com/Rthel-dev/Dumas-challenge.git dumas-app
 cd dumas-app/backend
 ```
 Generar archivo de variables de entorno y editarlo:
@@ -151,7 +151,7 @@ JWT_ACCESS_EXPIRES_IN=15m
 JWT_REFRESH_EXPIRES_IN=7d
 COOKIE_SECURE=true
 
-ALLOWED_ORIGINS='https://dominio-frontend.com'
+ALLOWED_ORIGINS=direcciones_permitidas_separadas_por_coma   ej.: https://dominio-frontend.com,
 PORT=3000
 ```
 Instalar dependencias:
@@ -176,8 +176,8 @@ npm run start:prod
 ```
 La documentación de la API (Swagger) estará disponible en `http://direccion_servidor:3000/api`.
 
-### Mantener el proceso activo
-Para mantener la aplicación ejecutándose de forma continua en el servidor, se recomienda utilizar un gestor de procesos como [PM2](https://pm2.keymetrics.io/):
+### Exponer la aplicación y mantener el proceso activo
+Para exponer la aplicación y mantenerla ejecutándose de forma continua en el servidor, se recomienda utilizar un gestor de procesos como [PM2](https://pm2.keymetrics.io/):
 ```
 npm install -g pm2
 pm2 start dist/src/main.js --name dumas-api
