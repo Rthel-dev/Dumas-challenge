@@ -51,9 +51,9 @@ describe('AuthController', () => {
         userId: 'uid1',
       });
 
-      const result = await controller.register({ email: 'a@b.com', password: 'pw' }, mockRes as any);
+      const result = await controller.register({ fullName: 'Test User', email: 'a@b.com', password: 'pw' }, mockRes as any);
 
-      expect(mockAuthService.register).toHaveBeenCalledWith({ email: 'a@b.com', password: 'pw' });
+      expect(mockAuthService.register).toHaveBeenCalledWith({ fullName: 'Test User', email: 'a@b.com', password: 'pw' });
       expect(mockRes.cookie).toHaveBeenCalledWith(
         'refresh_token',
         'refresh',

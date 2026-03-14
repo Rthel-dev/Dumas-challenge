@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Observable, tap, map } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { TokenService } from './token.service';
+import { UserStoreService } from './user-store.service';
 import { AuthResponse, LoginRequest, RegisterRequest } from '../models/auth.models';
 
 @Injectable({ providedIn: 'root' })
@@ -15,6 +16,7 @@ export class AuthService {
   constructor(
     private http: HttpClient,
     private tokenService: TokenService,
+    private userStore: UserStoreService,
     private router: Router,
   ) {}
 
@@ -23,6 +25,7 @@ export class AuthService {
       tap((res) => {
         this.tokenService.set(res.accessToken);
         this.currentUserId.set(res.userId);
+        this.userStore.loadProfile();
         this.router.navigate(['/dashboard']);
       }),
     );
@@ -33,6 +36,7 @@ export class AuthService {
       tap((res) => {
         this.tokenService.set(res.accessToken);
         this.currentUserId.set(res.userId);
+        this.userStore.loadProfile();
         this.router.navigate(['/dashboard']);
       }),
     );
@@ -57,6 +61,7 @@ export class AuthService {
       .subscribe({ error: () => {} });
     this.tokenService.clear();
     this.currentUserId.set(null);
+    this.userStore.clear();
     this.router.navigate(['/auth']);
   }
 }

@@ -1,16 +1,38 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { RouterOutlet, RouterLink } from '@angular/router';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import {
+  faSearch,
+  faBell,
+  faCog,
+  faPlus,
+  faTasks,
+  faCheckCircle,
+  faSignOutAlt,
+} from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from '../core/services/auth.service';
+import { UserStoreService } from '../core/services/user-store.service';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  template: `
-    <div class="container py-5">
-      <h1 class="fw-bold mb-4">Dashboard</h1>
-      <button class="btn btn-outline-dark" (click)="authService.logout()">Cerrar sesión</button>
-    </div>
-  `,
+  imports: [RouterOutlet, RouterLink, FontAwesomeModule],
+  templateUrl: './dashboard.component.html',
+  styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent {
+  // Icons
+  faSearch = faSearch;
+  faBell = faBell;
+  faCog = faCog;
+  faPlus = faPlus;
+  faTasks = faTasks;
+  faCheckCircle = faCheckCircle;
+  faSignOutAlt = faSignOutAlt;
+
+  // User profile
+  private userStore = inject(UserStoreService);
+  currentUser = this.userStore.currentUser;
+
   constructor(public authService: AuthService) {}
 }

@@ -69,8 +69,8 @@ export class AuthComponent {
     if (this.registerForm.invalid) return;
     this.isLoading.set(true);
     this.errorMessage.set(null);
-    const { email, password } = this.registerForm.value;
-    this.authService.register({ email, password }).subscribe({
+    const { fullName, email, password } = this.registerForm.value;
+    this.authService.register({ fullName, email, password }).subscribe({
       error: (err) => {
         this.isLoading.set(false);
         this.errorMessage.set(err?.error?.message ?? 'Error al registrarse.');

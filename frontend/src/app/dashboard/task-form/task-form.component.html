@@ -1,0 +1,96 @@
+<!-- Header section -->
+<div class="mb-4">
+  <h2 class="fw-black fs-2 text-dark">Nueva Tarea</h2>
+  <p class="text-muted mt-1">Complete los detalles para añadir una nueva tarea al flujo de trabajo de su proyecto.</p>
+</div>
+
+<!-- Form Card -->
+<div class="card form-card border">
+  <form
+    novalidate
+    class="card-body p-4 p-md-5"
+    [formGroup]="taskForm"
+    (ngSubmit)="onSubmit()"
+  >
+    <!-- Task Name -->
+    <div class="mb-4">
+      <label for="task-name" class="form-label fw-semibold">Nombre de la Tarea</label>
+      <input
+        type="text"
+        id="task-name"
+        class="form-control form-control-lg"
+        placeholder="Ej. Análisis de requerimientos técnicos"
+        formControlName="title"
+        [class.is-invalid]="submitted() && taskForm.get('title')?.invalid"
+      />
+      <div class="invalid-feedback">
+        El nombre de la tarea es obligatorio.
+      </div>
+    </div>
+
+    <!-- Deadline -->
+    <div class="mb-4">
+      <label for="deadline" class="form-label fw-semibold">Fecha Límite</label>
+      <div class="input-group">
+        <input
+          id="deadline"
+          class="form-control form-control-lg"
+          placeholder="dd/mm/aaaa"
+          formControlName="dueDate"
+          ngbDatepicker
+          #d="ngbDatepicker"
+          [readonly]="true"
+        />
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          (click)="d.toggle()"
+        >
+          <i class="bi bi-calendar3"></i>
+          Seleccionar
+        </button>
+      </div>
+    </div>
+
+    <!-- Completed Checkbox -->
+    <div class="mb-4 form-check">
+      <input
+        type="checkbox"
+        id="completed"
+        class="form-check-input"
+        formControlName="completed"
+      />
+      <label for="completed" class="form-check-label">
+        Marcar como completada
+      </label>
+    </div>
+
+    <!-- Actions -->
+    <div class="d-flex justify-content-end gap-3 pt-4 mt-3 border-top">
+      <button
+        type="button"
+        class="btn btn-link text-muted fw-bold text-decoration-none"
+        (click)="onCancel()"
+      >
+        Cancelar
+      </button>
+      <button
+        type="submit"
+        class="btn btn-accent d-flex align-items-center gap-2"
+      >
+        Crear Tarea
+      </button>
+    </div>
+  </form>
+</div>
+
+<!-- Quick Tips Section -->
+<div class="tip-box mt-4 p-3 d-flex align-items-start gap-3">
+  <fa-icon [icon]="faLightbulb" class="tip-icon mt-1"></fa-icon>
+  <div>
+    <h6 class="fw-bold tip-title mb-1">Consejo Profesional</h6>
+    <p class="mb-0 small text-muted">
+      Asigna una fecha límite clara para recibir recordatorios automáticos 24 horas antes del vencimiento.
+    </p>
+  </div>
+</div>
