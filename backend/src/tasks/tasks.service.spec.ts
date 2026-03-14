@@ -55,6 +55,19 @@ describe('TasksService', () => {
       });
       expect(result).toEqual(mockTask);
     });
+
+    it('should create a task with null dueDate when not provided', async () => {
+      const dto = { title: 'Test Task' };
+      const taskWithoutDate = { ...mockTask, dueDate: null };
+      prisma.task.create.mockResolvedValue(taskWithoutDate);
+
+      const result = await service.create(userId, dto);
+
+      expect(prisma.task.create).toHaveBeenCalledWith({
+        data: { ...dto, dueDate: null, userId },
+      });
+      expect(result).toEqual(taskWithoutDate);
+    });
   });
 
   describe('findAllByUser', () => {

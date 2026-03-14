@@ -9,7 +9,7 @@ export class TasksService {
 
   create(userId: string, dto: CreateTaskDto) {
     return this.prisma.task.create({
-      data: { ...dto, dueDate: new Date(dto.dueDate), userId },
+      data: { ...dto, dueDate: dto.dueDate ? new Date(dto.dueDate) : null, userId },
     });
   }
 

@@ -4,7 +4,9 @@ import {
   IsDateString,
   IsBoolean,
   IsOptional,
+  ValidateIf,
 } from 'class-validator';
+import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateTaskDto {
@@ -13,9 +15,11 @@ export class CreateTaskDto {
   @ApiProperty()
   title!: string;
 
+  @ValidateIf((o) => o.dueDate !== undefined)
   @IsDateString()
-  @ApiProperty()
-  dueDate!: string;
+  @Type(() => Date)
+  @ApiProperty({ required: false })
+  dueDate?: string;
 
   @IsBoolean()
   @IsOptional()
