@@ -1,98 +1,200 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Dumas Task API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+API REST para la gestión de tareas, desarrollada con NestJS 11, Prisma ORM y PostgreSQL.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Entorno de desarrollo
+* NodeJS v22+
+* npm v10+
+* PostgreSQL v12+
 
-## Description
+## Instalación
+La siguiente descripción de instalación se realiza considerando un sistema local con Ubuntu 20.04. Para otras distribuciones de sistemas operativos pueden haber variaciones en los comandos indicados.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+### nvm-sh
+*nvm-sh* es una herramienta que facilita la instalación de múltiples versiones de NodeJS en el sistema, por lo cual permite elegir la versión específica a utilizar. Para su instalación se debe contar con cURL instalado:
+```
+sudo apt update
+sudo apt install curl
+```
+Instalar *nvm-sh* a través del script de instalación proporcionado en la [documentación oficial](https://github.com/nvm-sh/nvm):
+```
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+```
+Ejecutar el siguiente comando para que la consola del sistema reconozca las instrucciones de *nvm-sh* en las siguientes sesiones de trabajo:
+```
+source ~/.bashrc
+```
+Cerrar la sesión actual y volver a abrir la consola para continuar con la instalación.
 
-## Project setup
-
-```bash
-$ npm install
+### Node.js
+Con la ayuda de *nvm-sh* ya es posible instalar la versión de *NodeJS* requerida a través del siguiente comando:
+```
+nvm install 22
+```
+Verificar la versión de *NodeJS* instalada:
+```
+node --version
+```
+Verificar la versión de npm instalada:
+```
+npm --version
 ```
 
-## Compile and run the project
-
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+### PostgreSQL
+Instalar *PostgreSQL* en el sistema:
+```
+sudo apt install postgresql postgresql-contrib libpq-dev
+```
+Cambiar a usuario postgres e ingresar a la consola de PostgreSQL:
+```
+sudo su - postgres
+psql
+```
+Crear un rol para el usuario actual, con permiso de creación de bases de datos y establecer su password de acceso:
+```
+create role 'tu_usuario' with createdb login password 'tu_password';
+```
+Crear la base de datos de la aplicación:
+```
+create database dumasdb owner 'tu_usuario';
+```
+Salir de la consola psql:
+```
+\q
+```
+Salir de la consola como usuario postgres:
+```
+exit
+```
+Probar acceso a psql con el nuevo usuario creado:
+```
+psql -d dumasdb
 ```
 
-## Run tests
+## Desplegar en entorno de desarrollo
 
-```bash
-# unit tests
-$ npm run test
+### Clonar repositorio e instalar dependencias
+Clonar el repositorio e ingresar al directorio de la aplicación:
+```
+git clone https://github.com/Rthel-dev/Dumas-challenge.git dumas-app
+cd dumas-app/backend
+```
+Generar archivo de variables de entorno de la aplicación copiando archivo .env.example a .env y editarlo:
+```
+cp .env.example .env
+nano .env
+```
+Cambiar valores de variables de entorno:
+```
+DB_USER='tu_usuario'
+DB_PASS='tu_password'
+DB_HOST='localhost'
+DB_PORT=5432
+DB_NAME='dumasdb'
+DATABASE_URL="postgresql://${DB_USER}:${DB_PASS}@${DB_HOST}:${DB_PORT}/${DB_NAME}?schema=public"
 
-# e2e tests
-$ npm run test:e2e
+JWT_ACCESS_SECRET='clave_secreta_acceso_min_32_caracteres'
+JWT_REFRESH_SECRET='clave_secreta_refresh_min_32_caracteres'
+JWT_ACCESS_EXPIRES_IN=15m
+JWT_REFRESH_EXPIRES_IN=7d
+COOKIE_SECURE=false
 
-# test coverage
-$ npm run test:cov
+ALLOWED_ORIGINS=direcciones_permitidas_separadas_por_coma  ej.: http://localhost:4200,
+PORT=3000
+```
+Instalar dependencias:
+```
+npm install
+```
+Generar el cliente de Prisma:
+```
+npx prisma generate
+```
+Ejecutar las migraciones de la base de datos:
+```
+npx prisma migrate dev
+```
+Desplegar la aplicación en entorno de desarrollo:
+```
+npm run start:dev
+```
+La aplicación estará disponible en `http://localhost:3000` y la documentación de la API (Swagger) en `http://localhost:3000/api`.
+
+## Desplegar en producción (instalación directa en servidor)
+
+### Requisitos previos
+Instalar *nvm-sh*, *Node.js* y *PostgreSQL* en el servidor siguiendo los mismos pasos descritos en la sección de [Instalación](#instalación).
+
+### Configurar la aplicación
+Clonar el repositorio e ingresar al directorio de la aplicación:
+```
+git clone https://github.com/Rthel-dev/Dumas-challenge.git dumas-app
+cd dumas-app/backend
+```
+Generar archivo de variables de entorno y editarlo:
+```
+cp .env.example .env
+nano .env
+```
+Configurar las variables de entorno con valores de producción:
+```
+DB_USER='usuario_produccion'
+DB_PASS='password_seguro_produccion'
+DB_HOST='direccion_servidor_bd'
+DB_PORT=5432
+DB_NAME='dumasdb'
+DATABASE_URL="postgresql://${DB_USER}:${DB_PASS}@${DB_HOST}:${DB_PORT}/${DB_NAME}?schema=public"
+
+JWT_ACCESS_SECRET='clave_secreta_acceso_produccion_min_32_caracteres'
+JWT_REFRESH_SECRET='clave_secreta_refresh_produccion_min_32_caracteres'
+JWT_ACCESS_EXPIRES_IN=15m
+JWT_REFRESH_EXPIRES_IN=7d
+COOKIE_SECURE=true
+
+ALLOWED_ORIGINS=direcciones_permitidas_separadas_por_coma   ej.: https://dominio-frontend.com,
+PORT=3000
+```
+Instalar dependencias:
+```
+npm install
+```
+Generar el cliente de Prisma:
+```
+npx prisma generate
+```
+Aplicar las migraciones en la base de datos de producción:
+```
+npx prisma migrate deploy
+```
+Compilar la aplicación:
+```
+npm run build
+```
+Iniciar la aplicación en modo producción:
+```
+npm run start:prod
+```
+La documentación de la API (Swagger) estará disponible en `http://direccion_servidor:3000/api`.
+
+### Exponer la aplicación y mantener el proceso activo
+Para exponer la aplicación y mantenerla ejecutándose de forma continua en el servidor, se recomienda utilizar un gestor de procesos como [PM2](https://pm2.keymetrics.io/):
+```
+npm install -g pm2
+pm2 start dist/src/main.js --name dumas-api
+pm2 save
+pm2 startup
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+## Tests
+Ejecutar tests unitarios:
 ```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+npm test
+```
+Ejecutar tests con reporte de cobertura:
+```
+npm run test:cov
+```
+Ejecutar tests de integración:
+```
+npm run test:integration
+```
