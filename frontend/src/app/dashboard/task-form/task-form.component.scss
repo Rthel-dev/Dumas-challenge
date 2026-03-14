@@ -29,6 +29,50 @@ $border-color: #e2e8f0;
   }
 }
 
+.input-group {
+  .form-control {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .btn-outline-secondary {
+    border-color: $border-color;
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+    font-size: 14px;
+
+    &:hover {
+      background-color: #f1f5f9;
+      border-color: $border-color;
+      color: #334155;
+    }
+  }
+}
+
+.form-check-input {
+  width: 20px;
+  height: 20px;
+  border-color: $border-color;
+  cursor: pointer;
+
+  &:checked {
+    background-color: $accent;
+    border-color: $accent;
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 3px rgba($accent, 0.15);
+    border-color: $accent;
+  }
+}
+
+.form-check-label {
+  font-size: 14px;
+  color: #334155;
+  padding-top: 2px;
+  cursor: pointer;
+}
+
 .btn-accent {
   background-color: $accent;
   border-color: $accent;
@@ -65,4 +109,31 @@ $border-color: #e2e8f0;
 .tip-title {
   color: $accent;
   font-size: 14px;
+}
+
+// ─── NgbDatepicker Overrides ──────────────────────────────────────────
+::ng-deep {
+  ngb-datepicker {
+    border-radius: 12px;
+    border-color: $border-color;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  }
+
+  .ngb-dp-weekday {
+    color: $accent;
+    font-weight: 600;
+  }
+
+  .ngb-dp-day .btn-light.bg-primary {
+    background-color: $accent !important;
+    border-color: $accent !important;
+  }
+
+  .ngb-dp-day .btn-light:hover {
+    background-color: rgba($accent, 0.1);
+  }
+
+  [ngbDatepickerDayView].btn-light.bg-primary {
+    background-color: $accent !important;
+  }
 }

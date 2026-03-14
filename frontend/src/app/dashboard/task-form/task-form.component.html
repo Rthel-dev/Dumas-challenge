@@ -6,7 +6,12 @@
 
 <!-- Form Card -->
 <div class="card form-card border">
-  <form class="card-body p-4 p-md-5" [formGroup]="taskForm" (ngSubmit)="onSubmit()">
+  <form
+    novalidate
+    class="card-body p-4 p-md-5"
+    [formGroup]="taskForm"
+    (ngSubmit)="onSubmit()"
+  >
     <!-- Task Name -->
     <div class="mb-4">
       <label for="task-name" class="form-label fw-semibold">Nombre de la Tarea</label>
@@ -16,29 +21,62 @@
         class="form-control form-control-lg"
         placeholder="Ej. Análisis de requerimientos técnicos"
         formControlName="title"
+        [class.is-invalid]="submitted() && taskForm.get('title')?.invalid"
       />
+      <div class="invalid-feedback">
+        El nombre de la tarea es obligatorio.
+      </div>
     </div>
 
     <!-- Deadline -->
     <div class="mb-4">
       <label for="deadline" class="form-label fw-semibold">Fecha Límite</label>
+      <div class="input-group">
+        <input
+          id="deadline"
+          class="form-control form-control-lg"
+          placeholder="dd/mm/aaaa"
+          formControlName="dueDate"
+          ngbDatepicker
+          #d="ngbDatepicker"
+          [readonly]="true"
+        />
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          (click)="d.toggle()"
+        >
+          <i class="bi bi-calendar3"></i>
+          Seleccionar
+        </button>
+      </div>
+    </div>
+
+    <!-- Completed Checkbox -->
+    <div class="mb-4 form-check">
       <input
-        type="date"
-        id="deadline"
-        class="form-control form-control-lg"
-        formControlName="dueDate"
+        type="checkbox"
+        id="completed"
+        class="form-check-input"
+        formControlName="completed"
       />
+      <label for="completed" class="form-check-label">
+        Marcar como completada
+      </label>
     </div>
 
     <!-- Actions -->
     <div class="d-flex justify-content-end gap-3 pt-4 mt-3 border-top">
-      <button type="button" class="btn btn-link text-muted fw-bold text-decoration-none" (click)="onCancel()">
+      <button
+        type="button"
+        class="btn btn-link text-muted fw-bold text-decoration-none"
+        (click)="onCancel()"
+      >
         Cancelar
       </button>
       <button
         type="submit"
         class="btn btn-accent d-flex align-items-center gap-2"
-        [disabled]="taskForm.invalid"
       >
         Crear Tarea
       </button>
