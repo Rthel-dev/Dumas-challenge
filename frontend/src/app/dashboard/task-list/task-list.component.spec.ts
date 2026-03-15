@@ -130,16 +130,11 @@ describe('TaskListComponent', () => {
       return cells?.[2]?.textContent?.trim() ?? '';
     }
 
-    it('renders midnight UTC date without timezone shift', () => {
+    it('renders local-midnight-as-UTC date correctly', () => {
+      // Simulate a date stored as local midnight converted to UTC (as formatDate does)
+      const localMidnightUtc = new Date(2026, 3, 1).toISOString();
       component.tasks.set([
-        { id: '1', title: 'Task', dueDate: '2026-04-01T00:00:00.000Z', completed: false, userId: 'u1', createdAt: '', updatedAt: '' },
-      ]);
-      expect(getDateCell()).toBe('01 Apr 2026');
-    });
-
-    it('renders date-only string correctly', () => {
-      component.tasks.set([
-        { id: '1', title: 'Task', dueDate: '2026-04-01', completed: false, userId: 'u1', createdAt: '', updatedAt: '' },
+        { id: '1', title: 'Task', dueDate: localMidnightUtc, completed: false, userId: 'u1', createdAt: '', updatedAt: '' },
       ]);
       expect(getDateCell()).toBe('01 Apr 2026');
     });

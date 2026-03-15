@@ -85,10 +85,7 @@ export class TaskFormComponent implements OnInit {
   }
 
   private formatDate(date: NgbDateStruct): string {
-    const y = date.year;
-    const m = String(date.month).padStart(2, '0');
-    const d = String(date.day).padStart(2, '0');
-    return `${y}-${m}-${d}`;
+    return new Date(date.year, date.month - 1, date.day).toISOString();
   }
 
   private parseDate(dateStr: string): NgbDateStruct {

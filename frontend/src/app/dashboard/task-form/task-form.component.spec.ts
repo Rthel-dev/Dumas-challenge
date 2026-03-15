@@ -10,6 +10,11 @@ describe('TaskFormComponent', () => {
   let mockTaskService: { create: jasmine.Spy; getById: jasmine.Spy; update: jasmine.Spy };
   let mockRouter: jasmine.SpyObj<Router>;
 
+  /** Helper: local midnight for a given date as ISO UTC string (same as formatDate) */
+  function localMidnightIso(year: number, month: number, day: number): string {
+    return new Date(year, month - 1, day).toISOString();
+  }
+
   function setup(routeId: string | null = null) {
     mockTaskService = {
       create: jasmine.createSpy().and.returnValue(EMPTY),
@@ -76,14 +81,15 @@ describe('TaskFormComponent', () => {
       expect(mockRouter.navigate).toHaveBeenCalledWith(['/dashboard']);
     });
 
-    it('onSubmit() converts NgbDateStruct to ISO string in request', () => {
-      mockTaskService.create.and.returnValue(of({ id: '1', title: 'Task', dueDate: '2026-04-01', completed: false }));
+    it('onSubmit() sends dueDate as ISO UTC string (local midnight)', () => {
+      const expectedIso = localMidnightIso(2026, 4, 1);
+      mockTaskService.create.and.returnValue(of({ id: '1', title: 'Task', dueDate: expectedIso, completed: false }));
       component.taskForm.patchValue({
         title: 'Task',
         dueDate: { year: 2026, month: 4, day: 1 },
       });
       component.onSubmit();
-      expect(mockTaskService.create).toHaveBeenCalledWith({ title: 'Task', dueDate: '2026-04-01' });
+      expect(mockTaskService.create).toHaveBeenCalledWith({ title: 'Task', dueDate: expectedIso });
     });
 
     it('onSubmit() includes completed when checked', () => {
@@ -107,8 +113,9 @@ describe('TaskFormComponent', () => {
       expect(component.isEditMode()).toBeTrue();
     });
 
-    it('loads task data on init', () => {
-      const task = { id: 'task-123', title: 'Existing Task', dueDate: '2026-05-15T12:00:00.000Z', completed: true, userId: 'u1', createdAt: '', updatedAt: '' };
+    it('loads task data on init and parses dueDate to NgbDateStruct', () => {
+      const storedDate = localMidnightIso(2026, 5, 15);
+      const task = { id: 'task-123', title: 'Existing Task', dueDate: storedDate, completed: true, userId: 'u1', createdAt: '', updatedAt: '' };
       mockTaskService.getById.and.returnValue(of(task));
       component.ngOnInit();
       expect(mockTaskService.getById).toHaveBeenCalledWith('task-123');
@@ -135,9 +142,10 @@ describe('TaskFormComponent', () => {
       expect(mockRouter.navigate).toHaveBeenCalledWith(['/dashboard']);
     });
 
-    it('onSubmit() in edit mode includes dueDate when set', () => {
+    it('onSubmit() in edit mode sends dueDate as ISO UTC string', () => {
+      const expectedIso = localMidnightIso(2026, 6, 1);
       mockTaskService.getById.and.returnValue(of({ id: 'task-123', title: 'Task', dueDate: null, completed: false, userId: 'u1', createdAt: '', updatedAt: '' }));
-      mockTaskService.update.and.returnValue(of({ id: 'task-123', title: 'Task', dueDate: '2026-06-01', completed: true }));
+      mockTaskService.update.and.returnValue(of({ id: 'task-123', title: 'Task', dueDate: expectedIso, completed: true }));
       component.ngOnInit();
       component.taskForm.patchValue({
         title: 'Task',
@@ -145,7 +153,19 @@ describe('TaskFormComponent', () => {
         completed: true,
       });
       component.onSubmit();
-      expect(mockTaskService.update).toHaveBeenCalledWith('task-123', { title: 'Task', dueDate: '2026-06-01', completed: true });
+      expect(mockTaskService.update).toHaveBeenCalledWith('task-123', { title: 'Task', dueDate: expectedIso, completed: true });
+    });
+
+    it('roundtrip: load task then submit preserves the same date', () => {
+      const storedDate = localMidnightIso(2026, 8, 20);
+      const task = { id: 'task-123', title: 'Roundtrip', dueDate: storedDate, completed: false, userId: 'u1', createdAt: '', updatedAt: '' };
+      mockTaskService.getById.and.returnValue(of(task));
+      mockTaskService.update.and.returnValue(of(task));
+      component.ngOnInit();
+      // Submit without modifying the form
+      component.onSubmit();
+      const callArgs = mockTaskService.update.calls.mostRecent().args;
+      expect(callArgs[1].dueDate).toBe(storedDate);
     });
   });
 });
