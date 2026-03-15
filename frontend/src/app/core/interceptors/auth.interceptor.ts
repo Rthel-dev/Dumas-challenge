@@ -1,8 +1,10 @@
 import { inject } from '@angular/core';
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
-import { catchError, switchMap, throwError } from 'rxjs';
+import { catchError, finalize, shareReplay, switchMap, throwError, Observable } from 'rxjs';
 import { TokenService } from '../services/token.service';
 import { AuthService } from '../services/auth.service';
+
+let refreshInProgress$: Observable<string> | null = null;
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const tokenService = inject(TokenService);
@@ -21,7 +23,14 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
       if (error.status === 401 && !isAuthEndpoint) {
-        return authService.refresh().pipe(
+        if (!refreshInProgress$) {
+          refreshInProgress$ = authService.refresh().pipe(
+            shareReplay(1),
+            finalize(() => (refreshInProgress$ = null)),
+          );
+        }
+
+        return refreshInProgress$.pipe(
           switchMap((newToken) =>
             next(
               req.clone({
