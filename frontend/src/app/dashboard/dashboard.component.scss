@@ -1,0 +1,117 @@
+$accent: #e86c25;
+$accent-dark: #c85a1e;
+$sidebar-bg: #0f172a;
+$sidebar-width: 256px;
+$topbar-height: 64px;
+$border-color: #e2e8f0;
+$text-muted-custom: #64748b;
+
+// ─── Layout ───────────────────────────────────────────────────────────
+.dashboard-layout {
+  min-height: 100vh;
+  background-color: #f8fafc;
+}
+
+// ─── Sidebar ──────────────────────────────────────────────────────────
+.sidebar {
+  width: $sidebar-width;
+  min-height: 100vh;
+  background-color: $sidebar-bg;
+  flex-shrink: 0;
+}
+
+.sidebar-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.logo-icon {
+  width: 32px;
+  height: 32px;
+  background-color: $accent;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.sidebar-nav {
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.6);
+    text-decoration: none;
+    font-size: 14px;
+    margin-bottom: 4px;
+    transition: background-color 0.15s, color 0.15s;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.08);
+      color: #fff;
+    }
+
+    &.active {
+      background-color: $accent;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .nav-icon {
+      width: 20px;
+      text-align: center;
+    }
+  }
+}
+
+.avatar-sm {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+// ─── Main Content ─────────────────────────────────────────────────────
+.main-content {
+  min-width: 0;
+}
+
+// ─── Top Bar ──────────────────────────────────────────────────────────
+.top-bar {
+  height: $topbar-height;
+  background-color: #fff;
+  flex-shrink: 0;
+}
+
+.notification-dot {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 8px;
+  height: 8px;
+  background-color: $accent;
+  border-radius: 50%;
+  border: 2px solid #fff;
+}
+
+.btn-accent {
+  background-color: $accent;
+  border-color: $accent;
+  color: #fff;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 16px;
+
+  &:hover {
+    background-color: $accent-dark;
+    border-color: $accent-dark;
+    color: #fff;
+  }
+}

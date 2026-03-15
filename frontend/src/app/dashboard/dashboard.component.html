@@ -1,0 +1,72 @@
+<div class="dashboard-layout d-flex">
+  <!-- ─── Sidebar ──────────────────────────────────────────────────────── -->
+  <aside class="sidebar d-flex flex-column">
+    <!-- Logo -->
+    <div class="sidebar-header d-flex align-items-center px-3 py-4">
+      <div class="logo-icon me-3">
+        <fa-icon [icon]="faTasks" class="text-white"></fa-icon>
+      </div>
+      <div>
+        <h6 class="mb-0 fw-bold text-white">Dumas App</h6>
+        <small class="text-white-50">Gestión de tareas</small>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sidebar-nav flex-grow-1 px-3 pt-2">
+      <a class="nav-item active" routerLink="/dashboard">
+        <fa-icon [icon]="faTasks" class="nav-icon"></fa-icon>
+        <span>Mis Tareas</span>
+      </a>
+      <a class="nav-item" href="javascript:void(0)" ngbTooltip="Pendiente de desarrollo..." placement="bottom">
+        <fa-icon [icon]="faCog" class="nav-icon"></fa-icon>
+        <span>Configuración</span>
+      </a>
+    </nav>
+
+    <!-- User Profile -->
+    <div class="sidebar-footer px-3 py-3 border-top border-secondary">
+      <div class="d-flex align-items-center">
+        <div class="avatar-sm me-2">
+          <fa-icon [icon]="faCheckCircle" class="text-white"></fa-icon>
+        </div>
+        <div class="flex-grow-1">
+          <small class="d-block text-white fw-semibold">{{ currentUser()?.fullName }}</small>
+          <small class="text-white-50" style="font-size: 11px;">{{ currentUser()?.email }}</small>
+        </div>
+        <button class="btn btn-sm text-white-50 p-0" (click)="authService.logout()" title="Cerrar sesión">
+          <fa-icon [icon]="faSignOutAlt"></fa-icon>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ─── Main Content ─────────────────────────────────────────────────── -->
+  <main class="main-content flex-grow-1 d-flex flex-column">
+    <!-- Top Bar -->
+    <header class="top-bar d-flex align-items-center justify-content-between px-4 border-bottom">
+      <div class="d-flex align-items-center">
+        <span class="text-muted fw-semibold" style="font-size: 14px;">Panel de Tareas</span>
+      </div>
+      <div class="d-flex align-items-center gap-3">
+        <button class="btn btn-link text-muted position-relative p-0" ngbTooltip="Pendiente de desarrollo..." placement="bottom">
+          <fa-icon [icon]="faBell"></fa-icon>
+          <span class="notification-dot"></span>
+        </button>
+        <button class="btn btn-link text-muted p-0" ngbTooltip="Pendiente de desarrollo..." placement="bottom">
+          <fa-icon [icon]="faCog"></fa-icon>
+        </button>
+        <div class="vr mx-2"></div>
+        <a routerLink="/dashboard/new" class="btn btn-accent btn-sm d-flex align-items-center gap-2">
+          <fa-icon [icon]="faPlus" size="sm"></fa-icon>
+          <span>Nueva Tarea</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- Child Route Content -->
+    <div class="dashboard-content p-4 flex-grow-1 overflow-auto">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>

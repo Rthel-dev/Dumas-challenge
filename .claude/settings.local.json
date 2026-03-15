@@ -1,0 +1,38 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd \"D:\\\\Rodrigo\\\\Documents\\\\Desarrollos NodeJS\\\\Challenge-Dumas\\\\backend\" && npm install @nestjs/config @nestjs/jwt bcrypt cookie-parser && npm install --save-dev @types/bcrypt @types/cookie-parser)",
+      "Bash(cd \"D:\\\\Rodrigo\\\\Documents\\\\Desarrollos NodeJS\\\\Challenge-Dumas\\\\backend\" && npx prisma migrate dev --name add-user-model 2>&1)",
+      "Bash(cd \"D:\\\\Rodrigo\\\\Documents\\\\Desarrollos NodeJS\\\\Challenge-Dumas\\\\backend\" && npx prisma generate 2>&1)",
+      "Bash(cd \"D:/Rodrigo/Documents/Desarrollos NodeJS/Challenge-Dumas/frontend\" && npm install bootstrap @ng-bootstrap/ng-bootstrap @fortawesome/fontawesome-svg-core @fortawesome/free-solid-svg-icons @fortawesome/free-regular-svg-icons @fortawesome/angular-fontawesome 2>&1 | tail -10)",
+      "Bash(cd \"D:/Rodrigo/Documents/Desarrollos NodeJS/Challenge-Dumas/frontend\" && npm install bootstrap @ng-bootstrap/ng-bootstrap @fortawesome/fontawesome-svg-core @fortawesome/free-solid-svg-icons @fortawesome/free-regular-svg-icons @fortawesome/angular-fontawesome --legacy-peer-deps 2>&1 | tail -10)",
+      "Bash(cd \"D:\\\\Rodrigo\\\\Documents\\\\Desarrollos NodeJS\\\\Challenge-Dumas\\\\backend\" && npm test -- --coverage --testPathPattern=\"users.service.spec|auth.service.spec|auth.controller.spec|jwt-auth.guard.spec|get-user.decorator.spec\" 2>&1)",
+      "Bash(cd \"D:\\\\Rodrigo\\\\Documents\\\\Desarrollos NodeJS\\\\Challenge-Dumas\\\\backend\" && npx jest --coverage --testPathPatterns=\"users.service.spec|auth.service.spec|auth.controller.spec|jwt-auth.guard.spec|get-user.decorator.spec\" 2>&1)",
+      "Bash(cd \"D:\\\\Rodrigo\\\\Documents\\\\Desarrollos NodeJS\\\\Challenge-Dumas\\\\frontend\" && npm test -- --watch=false 2>&1)",
+      "Bash(cd \"D:\\\\Rodrigo\\\\Documents\\\\Desarrollos NodeJS\\\\Challenge-Dumas\\\\backend\" && npm run build 2>&1)",
+      "Bash(cd \"D:\\\\Rodrigo\\\\Documents\\\\Desarrollos NodeJS\\\\Challenge-Dumas\\\\backend\" && npm run test:integration 2>&1)",
+      "Bash(cd \"D:\\\\Rodrigo\\\\Documents\\\\Desarrollos NodeJS\\\\Challenge-Dumas\\\\frontend\" && npm view @fortawesome/angular-fontawesome versions --json 2>&1 | tail -10)",
+      "Bash(cd \"D:\\\\Rodrigo\\\\Documents\\\\Desarrollos NodeJS\\\\Challenge-Dumas\\\\frontend\" && npm view @angular/localize versions --json 2>&1 | tail -20)",
+      "Bash(cd \"D:\\\\Rodrigo\\\\Documents\\\\Desarrollos NodeJS\\\\Challenge-Dumas\\\\frontend\" && npm view @ng-bootstrap/ng-bootstrap@19.0.1 peerDependencies --json 2>&1)",
+      "Bash(cd \"D:\\\\Rodrigo\\\\Documents\\\\Desarrollos NodeJS\\\\Challenge-Dumas\\\\frontend\" && npm view @fortawesome/angular-fontawesome@3.0.0 peerDependencies --json 2>&1)",
+      "Bash(cd \"D:\\\\Rodrigo\\\\Documents\\\\Desarrollos NodeJS\\\\Challenge-Dumas\\\\frontend\" && npm view @angular/localize@20 versions --json 2>&1)",
+      "Bash(cd \"D:\\\\Rodrigo\\\\Documents\\\\Desarrollos NodeJS\\\\Challenge-Dumas\\\\frontend\" && npm view @angular/localize@\">=20.0.0 <21.0.0\" version --json 2>&1 | tail -5)",
+      "Bash(cd \"D:\\\\Rodrigo\\\\Documents\\\\Desarrollos NodeJS\\\\Challenge-Dumas\\\\frontend\" && npm install 2>&1)",
+      "Bash(cd \"D:\\\\Rodrigo\\\\Documents\\\\Desarrollos NodeJS\\\\Challenge-Dumas\\\\frontend\" && node -e \"const pkg = require\\('./node_modules/@angular/compiler/package.json'\\); console.log\\(pkg.version\\)\")",
+      "Bash(cd \"D:\\\\Rodrigo\\\\Documents\\\\Desarrollos NodeJS\\\\Challenge-Dumas\\\\frontend\" && npm view @angular/localize@20.3.17 peerDependencies --json 2>&1)",
+      "Bash(cd \"D:\\\\Rodrigo\\\\Documents\\\\Desarrollos NodeJS\\\\Challenge-Dumas\\\\frontend\" && rm -rf node_modules package-lock.json && npm install 2>&1)",
+      "Bash(cd \"D:\\\\Rodrigo\\\\Documents\\\\Desarrollos NodeJS\\\\Challenge-Dumas\\\\backend\" && npx prisma migrate dev --name add-task-model 2>&1)",
+      "Bash(cd \"D:\\\\Rodrigo\\\\Documents\\\\Desarrollos NodeJS\\\\Challenge-Dumas\\\\backend\" && npm test 2>&1)",
+      "Bash(cd \"D:/Rodrigo/Documents/Desarrollos NodeJS/Challenge-Dumas/backend\" && npx jest src/tasks/ --verbose 2>&1)",
+      "Bash(cd \"D:/Rodrigo/Documents/Desarrollos NodeJS/Challenge-Dumas/backend\" && npm run test:integration -- --verbose 2>&1)",
+      "mcp__figma-remote-mcp__get_design_context",
+      "mcp__figma-remote-mcp__get_screenshot",
+      "mcp__figma-remote-mcp__get_metadata",
+      "Bash(cd \"D:/Rodrigo/Documents/Desarrollos NodeJS/Challenge-Dumas/backend\" && npx prisma migrate dev --name add_fullname_to_user 2>&1)",
+      "Bash(cd \"D:/Rodrigo/Documents/Desarrollos NodeJS/Challenge-Dumas/backend\" && npx jest src/tasks/ --no-coverage 2>&1)",
+      "Bash(cd \"D:/Rodrigo/Documents/Desarrollos NodeJS/Challenge-Dumas/frontend\" && npm test -- --no-watch 2>&1)",
+      "Bash(cd:*)",
+      "Bash(find:*)"
+    ]
+  }
+}
