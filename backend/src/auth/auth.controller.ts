@@ -30,14 +30,14 @@ export class AuthController {
       httpOnly: true,
       secure: this.config.get<string>('COOKIE_SECURE') === 'true',
       sameSite: 'lax',
-      path: '/auth/refresh',
+      path: '/',
     };
   }
 
   @Post('register')
   async register(@Body() dto: RegisterDto, @Res({ passthrough: true }) res: Response) {
     const { accessToken, refreshToken, userId } = await this.authService.register(dto);
-    res.cookie('refresh_token', refreshToken, this.refreshCookieOptions());
+    res.cookie('dumas_tk', refreshToken, this.refreshCookieOptions());
     return { accessToken, userId };
   }
 
@@ -45,14 +45,14 @@ export class AuthController {
   @HttpCode(200)
   async login(@Body() dto: LoginDto, @Res({ passthrough: true }) res: Response) {
     const { accessToken, refreshToken, userId } = await this.authService.login(dto);
-    res.cookie('refresh_token', refreshToken, this.refreshCookieOptions());
+    res.cookie('dumas_tk', refreshToken, this.refreshCookieOptions());
     return { accessToken, userId };
   }
 
   @Post('refresh')
   @HttpCode(200)
   async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    const rawToken: string | undefined = req.cookies?.['refresh_token'];
+    const rawToken: string | undefined = req.cookies?.['dumas_tk'];
     if (!rawToken) throw new UnauthorizedException('No refresh token provided');
 
     const payload = await this.jwtService.verifyAsync<{ sub: string }>(rawToken, {
@@ -65,7 +65,7 @@ export class AuthController {
       payload.sub,
       rawToken,
     );
-    res.cookie('refresh_token', refreshToken, this.refreshCookieOptions());
+    res.cookie('dumas_tk', refreshToken, this.refreshCookieOptions());
     return { accessToken, userId };
   }
 
@@ -77,7 +77,7 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     await this.authService.logout(userId);
-    res.clearCookie('refresh_token', this.refreshCookieOptions());
+    res.clearCookie('dumas_tk', this.refreshCookieOptions());
     return { message: 'Logged out successfully' };
   }
 }

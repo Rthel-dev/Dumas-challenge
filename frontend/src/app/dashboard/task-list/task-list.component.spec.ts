@@ -1,5 +1,6 @@
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideZonelessChangeDetection, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { EMPTY, of } from 'rxjs';
 import { TaskListComponent } from './task-list.component';
 import { TaskService } from '../../core/services/task.service';
@@ -7,8 +8,10 @@ import { UserStoreService } from '../../core/services/user-store.service';
 
 describe('TaskListComponent', () => {
   let component: TaskListComponent;
+  let fixture: ComponentFixture<TaskListComponent>;
   let mockTaskService: { getAll: jasmine.Spy; update: jasmine.Spy; delete: jasmine.Spy };
   let mockUserStore: { currentUser: ReturnType<typeof signal>; loadProfile: jasmine.Spy; clear: jasmine.Spy };
+  let mockRouter: jasmine.SpyObj<Router>;
 
   beforeEach(async () => {
     mockTaskService = {
@@ -21,6 +24,7 @@ describe('TaskListComponent', () => {
       loadProfile: jasmine.createSpy(),
       clear: jasmine.createSpy(),
     };
+    mockRouter = jasmine.createSpyObj('Router', ['navigate']);
 
     await TestBed.configureTestingModule({
       imports: [TaskListComponent],
@@ -28,10 +32,11 @@ describe('TaskListComponent', () => {
         provideZonelessChangeDetection(),
         { provide: TaskService, useValue: mockTaskService },
         { provide: UserStoreService, useValue: mockUserStore },
+        { provide: Router, useValue: mockRouter },
       ],
     }).compileComponents();
 
-    const fixture = TestBed.createComponent(TaskListComponent);
+    fixture = TestBed.createComponent(TaskListComponent);
     component = fixture.componentInstance;
   });
 
@@ -99,6 +104,12 @@ describe('TaskListComponent', () => {
     expect(component.tasks().length).toBe(0);
   });
 
+  it('editTask navigates to /dashboard/edit/:id', () => {
+    const task = { id: 'abc-123', title: 'Task', dueDate: '2026-04-01', completed: false, userId: 'u1', createdAt: '', updatedAt: '' };
+    component.editTask(task);
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['/dashboard/edit', 'abc-123']);
+  });
+
   it('computed stats are correct', () => {
     component.tasks.set([
       { id: '1', title: 'A', dueDate: '2026-04-01', completed: true, userId: 'u1', createdAt: '', updatedAt: '' },
@@ -109,5 +120,30 @@ describe('TaskListComponent', () => {
     expect(component.completedCount()).toBe(2);
     expect(component.pendingCount()).toBe(1);
     expect(component.completionRate()).toBe(67);
+  });
+
+  describe('dueDate rendering in DOM', () => {
+    function getDateCell(): string {
+      fixture.detectChanges();
+      const row = fixture.nativeElement.querySelector('tbody tr');
+      const cells = row?.querySelectorAll('td');
+      return cells?.[2]?.textContent?.trim() ?? '';
+    }
+
+    it('renders local-midnight-as-UTC date correctly', () => {
+      // Simulate a date stored as local midnight converted to UTC (as formatDate does)
+      const localMidnightUtc = new Date(2026, 3, 1).toISOString();
+      component.tasks.set([
+        { id: '1', title: 'Task', dueDate: localMidnightUtc, completed: false, userId: 'u1', createdAt: '', updatedAt: '' },
+      ]);
+      expect(getDateCell()).toBe('01 Apr 2026');
+    });
+
+    it('renders empty when dueDate is null', () => {
+      component.tasks.set([
+        { id: '1', title: 'Task', dueDate: null, completed: false, userId: 'u1', createdAt: '', updatedAt: '' },
+      ]);
+      expect(getDateCell()).toBe('');
+    });
   });
 });

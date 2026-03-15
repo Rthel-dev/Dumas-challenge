@@ -14,7 +14,7 @@ export class TasksService {
   }
 
   findAllByUser(userId: string) {
-    return this.prisma.task.findMany({ where: { userId } });
+    return this.prisma.task.findMany({ where: { userId }, orderBy: { id: 'desc' } });
   }
 
   async findOne(id: string, userId: string) {

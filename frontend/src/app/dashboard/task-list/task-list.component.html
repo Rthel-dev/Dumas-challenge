@@ -82,10 +82,18 @@
         </button>
       </li>
     </ul>
-    <button class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1">
-      <fa-icon [icon]="faChevronDown" size="xs"></fa-icon>
-      <span>Filtro</span>
-    </button>
+    <div ngbDropdown>
+      <button class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1" ngbDropdownToggle>
+        <fa-icon [icon]="faChevronDown" size="xs"></fa-icon>
+        <span>Filtro</span>
+      </button>
+      <div ngbDropdownMenu>
+        <button ngbDropdownItem (click)="setTab('pending')">Pendientes</button>
+        <button ngbDropdownItem (click)="setTab('completed')">Completadas</button>
+        <div class="dropdown-divider"></div>
+        <button ngbDropdownItem (click)="setTab('all')">Todas</button>
+      </div>
+    </div>
   </div>
 
   <!-- Table -->
@@ -124,16 +132,23 @@
             </td>
             <td class="text-muted">{{ task.dueDate | date:'dd MMM yyyy' }}</td>
             <td class="text-end pe-3">
-              <div class="dropdown">
+              <div ngbDropdown placement="bottom-end" container="body">
                 <button
                   class="btn btn-sm btn-link text-muted p-0"
-                  data-bs-toggle="dropdown"
+                  ngbDropdownToggle
                 >
                   <fa-icon [icon]="faEllipsisV"></fa-icon>
                 </button>
-                <ul class="dropdown-menu dropdown-menu-end">
-                  <li><button class="dropdown-item text-danger" (click)="deleteTask(task)">Eliminar</button></li>
-                </ul>
+                <div ngbDropdownMenu>
+                  <button ngbDropdownItem class="d-flex align-items-center gap-2" (click)="editTask(task)">
+                    <fa-icon [icon]="faPenToSquare"></fa-icon>
+                    Actualizar
+                  </button>
+                  <button ngbDropdownItem class="text-danger d-flex align-items-center gap-2" (click)="deleteTask(task)">
+                    <fa-icon [icon]="faTrashCan"></fa-icon>
+                    Eliminar
+                  </button>
+                </div>
               </div>
             </td>
           </tr>

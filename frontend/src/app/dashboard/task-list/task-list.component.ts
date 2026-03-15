@@ -2,7 +2,10 @@ import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+import { Router } from '@angular/router';
 import { faCheckCircle, faClock, faChartLine, faEllipsisV, faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { faPenToSquare, faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import { TaskService } from '../../core/services/task.service';
 import { UserStoreService } from '../../core/services/user-store.service';
 import { Task } from '../../core/models/task.models';
@@ -12,7 +15,7 @@ export type TabFilter = 'all' | 'pending' | 'completed';
 @Component({
   selector: 'app-task-list',
   standalone: true,
-  imports: [DatePipe, FormsModule, FontAwesomeModule],
+  imports: [DatePipe, FormsModule, FontAwesomeModule, NgbDropdownModule],
   templateUrl: './task-list.component.html',
   styleUrl: './task-list.component.scss',
 })
@@ -23,13 +26,15 @@ export class TaskListComponent implements OnInit {
   faChartLine = faChartLine;
   faEllipsisV = faEllipsisV;
   faChevronDown = faChevronDown;
+  faPenToSquare = faPenToSquare;
+  faTrashCan = faTrashCan;
 
   // State
   tasks = signal<Task[]>([]);
   activeTab = signal<TabFilter>('all');
   searchQuery = signal('');
   currentPage = signal(1);
-  pageSize = 10;
+  pageSize = 8;
 
   // Computed
   filteredTasks = computed(() => {
@@ -70,6 +75,7 @@ export class TaskListComponent implements OnInit {
   currentUser = this.userStore.currentUser;
 
   private taskService = inject(TaskService);
+  private router = inject(Router);
 
   ngOnInit(): void {
     this.loadTasks();
@@ -99,6 +105,10 @@ export class TaskListComponent implements OnInit {
         );
       },
     });
+  }
+
+  editTask(task: Task): void {
+    this.router.navigate(['/dashboard/edit', task.id]);
   }
 
   deleteTask(task: Task): void {

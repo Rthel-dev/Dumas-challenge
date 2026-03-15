@@ -78,6 +78,7 @@ describe('TasksService', () => {
 
       expect(prisma.task.findMany).toHaveBeenCalledWith({
         where: { userId },
+        orderBy: { id: 'desc' },
       });
       expect(result).toEqual([mockTask]);
     });

@@ -14,6 +14,7 @@ export const routes: Routes = [
     children: [
       { path: '', component: TaskListComponent },
       { path: 'new', component: TaskFormComponent },
+      { path: 'edit/:id', component: TaskFormComponent },
     ],
   },
   { path: '', redirectTo: '/auth', pathMatch: 'full' },
