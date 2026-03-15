@@ -132,6 +132,29 @@ describe('UsersService', () => {
     });
   });
 
+  describe('findByIdWithToken', () => {
+    it('returns the user with refreshToken when found', async () => {
+      const user = { id: '1', email: 'a@b.com', refreshToken: 'hashedToken' };
+      mockPrismaService.user.findUnique.mockResolvedValue(user);
+
+      const result = await service.findByIdWithToken('1');
+
+      expect(mockPrismaService.user.findUnique).toHaveBeenCalledWith({
+        where: { id: '1' },
+        select: { id: true, email: true, refreshToken: true },
+      });
+      expect(result).toEqual(user);
+    });
+
+    it('returns null when not found', async () => {
+      mockPrismaService.user.findUnique.mockResolvedValue(null);
+
+      const result = await service.findByIdWithToken('missing');
+
+      expect(result).toBeNull();
+    });
+  });
+
   describe('getProfile', () => {
     it('returns id, fullName, and email for the user', async () => {
       const profile = { id: '1', fullName: 'Test User', email: 'a@b.com' };

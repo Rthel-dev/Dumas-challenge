@@ -174,9 +174,13 @@ describe('TasksController (e2e)', () => {
     it('200 -> returns tasks ordered by id desc', async () => {
       const { accessToken } = await registerAndGetToken();
 
-      await createTask(accessToken, { title: 'First', dueDate: '2026-01-01' });
-      await createTask(accessToken, { title: 'Second', dueDate: '2026-02-01' });
-      await createTask(accessToken, { title: 'Third', dueDate: '2026-03-01' });
+      const t1 = await createTask(accessToken, { title: 'First', dueDate: '2026-01-01' });
+      const t2 = await createTask(accessToken, { title: 'Second', dueDate: '2026-02-01' });
+      const t3 = await createTask(accessToken, { title: 'Third', dueDate: '2026-03-01' });
+
+      const createdIds = [t1, t2, t3]
+        .map((t: any) => t.id)
+        .sort((a: string, b: string) => b.localeCompare(a));
 
       const res = await request(app.getHttpServer())
         .get('/tasks')
@@ -184,9 +188,9 @@ describe('TasksController (e2e)', () => {
         .expect(200);
 
       expect(res.body).toHaveLength(3);
-      expect(res.body[0].title).toBe('Third');
-      expect(res.body[1].title).toBe('Second');
-      expect(res.body[2].title).toBe('First');
+
+      const returnedIds = res.body.map((t: any) => t.id);
+      expect(returnedIds).toEqual(createdIds);
     });
 
     it('401 -> no Authorization header', async () => {

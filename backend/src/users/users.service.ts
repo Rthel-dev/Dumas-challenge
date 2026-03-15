@@ -56,6 +56,20 @@ export class UsersService {
   }
 
   /**
+   * Busca un usuario por ID incluyendo el refresh token hasheado.
+   * Usado exclusivamente en el flujo de refresh de tokens.
+   *
+   * @param id - UUID del usuario.
+   * @returns Usuario con id, email y refreshToken, o `null` si no existe.
+   */
+  findByIdWithToken(id: string) {
+    return this.prisma.user.findUnique({
+      where: { id },
+      select: { id: true, email: true, refreshToken: true },
+    });
+  }
+
+  /**
    * Obtiene el perfil publico de un usuario (sin datos sensibles).
    *
    * @param id - UUID del usuario.

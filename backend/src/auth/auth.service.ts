@@ -69,7 +69,7 @@ export class AuthService {
    * @throws UnauthorizedException si el token no coincide o el usuario no existe.
    */
   async refresh(userId: string, rawRefreshToken: string) {
-    const user = await this.usersService.findById(userId);
+    const user = await this.usersService.findByIdWithToken(userId);
     if (!user?.refreshToken) throw new UnauthorizedException('Access denied');
 
     const tokenMatch = await bcrypt.compare(rawRefreshToken, user.refreshToken);
