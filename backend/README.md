@@ -120,6 +120,30 @@ npm run start:dev
 ```
 La aplicación estará disponible en `http://localhost:3000` y la documentación de la API (Swagger) en `http://localhost:3000/api`.
 
+## Endpoints de la API
+
+### Auth (`/auth`)
+| Método | Ruta | Descripción | Autenticación |
+|--------|------|-------------|---------------|
+| POST | `/auth/register` | Registrar nuevo usuario | No |
+| POST | `/auth/login` | Iniciar sesión | No |
+| POST | `/auth/refresh` | Renovar access token | No (usa cookie refresh_token) |
+| POST | `/auth/logout` | Cerrar sesión | Sí |
+
+### Users (`/users`)
+| Método | Ruta | Descripción | Autenticación |
+|--------|------|-------------|---------------|
+| GET | `/users/me` | Obtener perfil del usuario autenticado | Sí |
+
+### Tasks (`/tasks`)
+| Método | Ruta | Descripción | Autenticación |
+|--------|------|-------------|---------------|
+| POST | `/tasks` | Crear nueva tarea | Sí |
+| GET | `/tasks` | Listar tareas del usuario | Sí |
+| GET | `/tasks/:id` | Obtener tarea por ID | Sí |
+| PATCH | `/tasks/:id` | Actualizar tarea | Sí |
+| DELETE | `/tasks/:id` | Eliminar tarea | Sí |
+
 ## Desplegar en producción (instalación directa en servidor)
 
 ### Requisitos previos

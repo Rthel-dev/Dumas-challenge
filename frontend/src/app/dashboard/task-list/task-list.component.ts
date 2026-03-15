@@ -29,7 +29,7 @@ export class TaskListComponent implements OnInit {
   activeTab = signal<TabFilter>('all');
   searchQuery = signal('');
   currentPage = signal(1);
-  pageSize = 5;
+  pageSize = 10;
 
   // Computed
   filteredTasks = computed(() => {
