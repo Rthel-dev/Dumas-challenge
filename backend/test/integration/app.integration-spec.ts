@@ -1,7 +1,11 @@
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { PrismaService } from '../../src/prisma/prisma.service';
-import { createTestApp, cleanDatabase, closeTestApp } from './helpers/test-app.helper';
+import {
+  createTestApp,
+  cleanDatabase,
+  closeTestApp,
+} from './helpers/test-app.helper';
 
 describe('AppController (integration)', () => {
   let app: INestApplication;

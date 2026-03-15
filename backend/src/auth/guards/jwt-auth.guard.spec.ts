@@ -48,7 +48,9 @@ describe('JwtAuthGuard', () => {
 
     expect(result).toBe(true);
     expect(ctx.request['user']).toEqual(payload);
-    expect(mockJwtService.verifyAsync).toHaveBeenCalledWith('validToken', { secret: 'access-secret' });
+    expect(mockJwtService.verifyAsync).toHaveBeenCalledWith('validToken', {
+      secret: 'access-secret',
+    });
   });
 
   it('throws UnauthorizedException with correct message when no Authorization header', async () => {
@@ -83,6 +85,9 @@ describe('JwtAuthGuard', () => {
 
     await guard.canActivate(ctx);
 
-    expect(mockJwtService.verifyAsync).toHaveBeenCalledWith('mytoken123', expect.any(Object));
+    expect(mockJwtService.verifyAsync).toHaveBeenCalledWith(
+      'mytoken123',
+      expect.any(Object),
+    );
   });
 });

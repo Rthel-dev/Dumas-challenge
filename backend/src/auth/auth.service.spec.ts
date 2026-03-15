@@ -61,20 +61,41 @@ describe('AuthService', () => {
         .mockResolvedValueOnce('refreshToken');
       mockUsersService.updateRefreshToken.mockResolvedValue(undefined);
 
-      const result = await service.register({ fullName: 'Test User', email: 'a@b.com', password: 'secret' });
+      const result = await service.register({
+        fullName: 'Test User',
+        email: 'a@b.com',
+        password: 'secret',
+      });
 
-      expect(mockUsersService.create).toHaveBeenCalledWith({ fullName: 'Test User', email: 'a@b.com', password: 'secret' });
+      expect(mockUsersService.create).toHaveBeenCalledWith({
+        fullName: 'Test User',
+        email: 'a@b.com',
+        password: 'secret',
+      });
       expect(mockJwtService.signAsync).toHaveBeenCalledTimes(2);
-      expect(mockUsersService.updateRefreshToken).toHaveBeenCalledWith('uid1', 'refreshToken');
-      expect(result).toEqual({ accessToken: 'accessToken', refreshToken: 'refreshToken', userId: 'uid1' });
+      expect(mockUsersService.updateRefreshToken).toHaveBeenCalledWith(
+        'uid1',
+        'refreshToken',
+      );
+      expect(result).toEqual({
+        accessToken: 'accessToken',
+        refreshToken: 'refreshToken',
+        userId: 'uid1',
+      });
     });
 
     it('propagates ConflictException without calling updateRefreshToken', async () => {
-      mockUsersService.create.mockRejectedValue(new ConflictException('Email already in use'));
-
-      await expect(service.register({ fullName: 'Test User', email: 'a@b.com', password: 'secret' })).rejects.toThrow(
-        ConflictException,
+      mockUsersService.create.mockRejectedValue(
+        new ConflictException('Email already in use'),
       );
+
+      await expect(
+        service.register({
+          fullName: 'Test User',
+          email: 'a@b.com',
+          password: 'secret',
+        }),
+      ).rejects.toThrow(ConflictException);
       expect(mockUsersService.updateRefreshToken).not.toHaveBeenCalled();
     });
   });
@@ -83,18 +104,22 @@ describe('AuthService', () => {
     it('throws UnauthorizedException if user not found', async () => {
       mockUsersService.findByEmail.mockResolvedValue(null);
 
-      await expect(service.login({ email: 'a@b.com', password: 'secret' })).rejects.toThrow(
-        UnauthorizedException,
-      );
+      await expect(
+        service.login({ email: 'a@b.com', password: 'secret' }),
+      ).rejects.toThrow(UnauthorizedException);
     });
 
     it('throws UnauthorizedException if bcrypt.compare returns false', async () => {
-      mockUsersService.findByEmail.mockResolvedValue({ id: '1', email: 'a@b.com', password: 'hash' });
+      mockUsersService.findByEmail.mockResolvedValue({
+        id: '1',
+        email: 'a@b.com',
+        password: 'hash',
+      });
       (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
-      await expect(service.login({ email: 'a@b.com', password: 'wrong' })).rejects.toThrow(
-        UnauthorizedException,
-      );
+      await expect(
+        service.login({ email: 'a@b.com', password: 'wrong' }),
+      ).rejects.toThrow(UnauthorizedException);
     });
 
     it('returns tokens on success and calls bcrypt.compare with plain pw and stored hash', async () => {
@@ -106,10 +131,17 @@ describe('AuthService', () => {
         .mockResolvedValueOnce('refreshToken');
       mockUsersService.updateRefreshToken.mockResolvedValue(undefined);
 
-      const result = await service.login({ email: 'a@b.com', password: 'plainPw' });
+      const result = await service.login({
+        email: 'a@b.com',
+        password: 'plainPw',
+      });
 
       expect(bcrypt.compare).toHaveBeenCalledWith('plainPw', 'storedHash');
-      expect(result).toEqual({ accessToken: 'accessToken', refreshToken: 'refreshToken', userId: 'uid1' });
+      expect(result).toEqual({
+        accessToken: 'accessToken',
+        refreshToken: 'refreshToken',
+        userId: 'uid1',
+      });
     });
   });
 
@@ -117,24 +149,40 @@ describe('AuthService', () => {
     it('throws UnauthorizedException if user not found', async () => {
       mockUsersService.findById.mockResolvedValue(null);
 
-      await expect(service.refresh('uid1', 'rawToken')).rejects.toThrow(UnauthorizedException);
+      await expect(service.refresh('uid1', 'rawToken')).rejects.toThrow(
+        UnauthorizedException,
+      );
     });
 
     it('throws UnauthorizedException if user.refreshToken is null (falsy)', async () => {
-      mockUsersService.findById.mockResolvedValue({ id: 'uid1', refreshToken: null });
+      mockUsersService.findById.mockResolvedValue({
+        id: 'uid1',
+        refreshToken: null,
+      });
 
-      await expect(service.refresh('uid1', 'rawToken')).rejects.toThrow(UnauthorizedException);
+      await expect(service.refresh('uid1', 'rawToken')).rejects.toThrow(
+        UnauthorizedException,
+      );
     });
 
     it('throws UnauthorizedException if bcrypt.compare returns false', async () => {
-      mockUsersService.findById.mockResolvedValue({ id: 'uid1', refreshToken: 'storedHash' });
+      mockUsersService.findById.mockResolvedValue({
+        id: 'uid1',
+        refreshToken: 'storedHash',
+      });
       (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
-      await expect(service.refresh('uid1', 'rawToken')).rejects.toThrow(UnauthorizedException);
+      await expect(service.refresh('uid1', 'rawToken')).rejects.toThrow(
+        UnauthorizedException,
+      );
     });
 
     it('returns new tokens on success', async () => {
-      mockUsersService.findById.mockResolvedValue({ id: 'uid1', email: 'a@b.com', refreshToken: 'storedHash' });
+      mockUsersService.findById.mockResolvedValue({
+        id: 'uid1',
+        email: 'a@b.com',
+        refreshToken: 'storedHash',
+      });
       (bcrypt.compare as jest.Mock).mockResolvedValue(true);
       mockJwtService.signAsync
         .mockResolvedValueOnce('newAccessToken')
@@ -143,7 +191,11 @@ describe('AuthService', () => {
 
       const result = await service.refresh('uid1', 'rawToken');
 
-      expect(result).toEqual({ accessToken: 'newAccessToken', refreshToken: 'newRefreshToken', userId: 'uid1' });
+      expect(result).toEqual({
+        accessToken: 'newAccessToken',
+        refreshToken: 'newRefreshToken',
+        userId: 'uid1',
+      });
     });
   });
 
@@ -153,7 +205,10 @@ describe('AuthService', () => {
 
       await service.logout('uid1');
 
-      expect(mockUsersService.updateRefreshToken).toHaveBeenCalledWith('uid1', null);
+      expect(mockUsersService.updateRefreshToken).toHaveBeenCalledWith(
+        'uid1',
+        null,
+      );
     });
   });
 });

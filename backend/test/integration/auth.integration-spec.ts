@@ -1,7 +1,11 @@
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { PrismaService } from '../../src/prisma/prisma.service';
-import { createTestApp, cleanDatabase, closeTestApp } from './helpers/test-app.helper';
+import {
+  createTestApp,
+  cleanDatabase,
+  closeTestApp,
+} from './helpers/test-app.helper';
 import * as bcrypt from 'bcrypt';
 
 describe('AuthController (integration)', () => {
@@ -38,7 +42,9 @@ describe('AuthController (integration)', () => {
 
       const cookies: string[] = res.headers['set-cookie'];
       expect(cookies).toBeDefined();
-      expect(cookies.some((c: string) => c.startsWith('refresh_token='))).toBe(true);
+      expect(cookies.some((c: string) => c.startsWith('refresh_token='))).toBe(
+        true,
+      );
 
       // Verify user exists in DB
       const user = await prisma.user.findUnique({
@@ -88,9 +94,7 @@ describe('AuthController (integration)', () => {
 
   describe('POST /auth/login', () => {
     beforeEach(async () => {
-      await request(app.getHttpServer())
-        .post('/auth/register')
-        .send(validUser);
+      await request(app.getHttpServer()).post('/auth/register').send(validUser);
     });
 
     it('200 → returns accessToken, userId, sets refresh_token cookie', async () => {
@@ -103,7 +107,9 @@ describe('AuthController (integration)', () => {
       expect(res.body).toHaveProperty('userId');
 
       const cookies: string[] = res.headers['set-cookie'];
-      expect(cookies.some((c: string) => c.startsWith('refresh_token='))).toBe(true);
+      expect(cookies.some((c: string) => c.startsWith('refresh_token='))).toBe(
+        true,
+      );
 
       // Verify refreshToken updated in DB
       const user = await prisma.user.findUnique({
@@ -157,7 +163,9 @@ describe('AuthController (integration)', () => {
       userId = res.body.userId;
 
       const cookies: string[] = res.headers['set-cookie'];
-      refreshCookie = cookies.find((c: string) => c.startsWith('refresh_token='))!;
+      refreshCookie = cookies.find((c: string) =>
+        c.startsWith('refresh_token='),
+      )!;
     });
 
     it('200 → returns new accessToken, userId, rotates cookie and DB token', async () => {
@@ -169,8 +177,8 @@ describe('AuthController (integration)', () => {
 
       const res = await request(app.getHttpServer())
         .post('/auth/refresh')
-        .set('Cookie', refreshCookie)
-        // .expect(200);
+        .set('Cookie', refreshCookie);
+      // .expect(200);
 
       expect(res.statusCode).toBe(200);
       expect(res.body).toHaveProperty('accessToken');
@@ -178,7 +186,9 @@ describe('AuthController (integration)', () => {
       expect(res.body.userId).toBe(userId);
 
       const newCookies: string[] = res.headers['set-cookie'];
-      expect(newCookies.some((c: string) => c.startsWith('refresh_token='))).toBe(true);
+      expect(
+        newCookies.some((c: string) => c.startsWith('refresh_token=')),
+      ).toBe(true);
 
       // Verify refreshToken rotated in DB
       const after = await prisma.user.findUnique({
@@ -190,9 +200,7 @@ describe('AuthController (integration)', () => {
     });
 
     it('401 → no cookie', async () => {
-      await request(app.getHttpServer())
-        .post('/auth/refresh')
-        .expect(401);
+      await request(app.getHttpServer()).post('/auth/refresh').expect(401);
     });
 
     it('401 → invalid JWT in cookie', async () => {
@@ -227,7 +235,9 @@ describe('AuthController (integration)', () => {
 
       // Verify cookie cleared
       const cookies: string[] = res.headers['set-cookie'];
-      expect(cookies.some((c: string) => c.includes('refresh_token=;'))).toBe(true);
+      expect(cookies.some((c: string) => c.includes('refresh_token=;'))).toBe(
+        true,
+      );
 
       // Verify refreshToken null in DB
       const user = await prisma.user.findUnique({
@@ -238,9 +248,7 @@ describe('AuthController (integration)', () => {
     });
 
     it('401 → no Authorization header', async () => {
-      await request(app.getHttpServer())
-        .post('/auth/logout')
-        .expect(401);
+      await request(app.getHttpServer()).post('/auth/logout').expect(401);
     });
 
     it('401 → invalid token', async () => {

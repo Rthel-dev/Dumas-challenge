@@ -97,11 +97,7 @@ describe('TasksController', () => {
 
       const result = await controller.update(taskId, userId, dto);
 
-      expect(mockTasksService.update).toHaveBeenCalledWith(
-        taskId,
-        userId,
-        dto,
-      );
+      expect(mockTasksService.update).toHaveBeenCalledWith(taskId, userId, dto);
       expect(result).toEqual(updated);
     });
 

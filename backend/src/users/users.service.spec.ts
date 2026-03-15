@@ -36,10 +36,17 @@ describe('UsersService', () => {
   describe('create', () => {
     it('hashes the password with salt 12 and creates the user', async () => {
       mockPrismaService.user.findUnique.mockResolvedValue(null);
-      mockPrismaService.user.create.mockResolvedValue({ id: '1', email: 'a@b.com' });
+      mockPrismaService.user.create.mockResolvedValue({
+        id: '1',
+        email: 'a@b.com',
+      });
       (bcrypt.hash as jest.Mock).mockResolvedValue('hashedPw');
 
-      const result = await service.create({ fullName: 'Test User', email: 'a@b.com', password: 'secret' });
+      const result = await service.create({
+        fullName: 'Test User',
+        email: 'a@b.com',
+        password: 'secret',
+      });
 
       expect(bcrypt.hash).toHaveBeenCalledWith('secret', 12);
       expect(mockPrismaService.user.create).toHaveBeenCalledWith({
@@ -49,19 +56,33 @@ describe('UsersService', () => {
     });
 
     it('throws ConflictException if email already exists', async () => {
-      mockPrismaService.user.findUnique.mockResolvedValue({ id: '1', email: 'a@b.com' });
+      mockPrismaService.user.findUnique.mockResolvedValue({
+        id: '1',
+        email: 'a@b.com',
+      });
 
-      await expect(service.create({ fullName: 'Test User', email: 'a@b.com', password: 'secret' })).rejects.toThrow(
-        ConflictException,
-      );
+      await expect(
+        service.create({
+          fullName: 'Test User',
+          email: 'a@b.com',
+          password: 'secret',
+        }),
+      ).rejects.toThrow(ConflictException);
     });
 
     it('does NOT call create if email is taken', async () => {
-      mockPrismaService.user.findUnique.mockResolvedValue({ id: '1', email: 'a@b.com' });
+      mockPrismaService.user.findUnique.mockResolvedValue({
+        id: '1',
+        email: 'a@b.com',
+      });
 
-      await expect(service.create({ fullName: 'Test User', email: 'a@b.com', password: 'secret' })).rejects.toThrow(
-        ConflictException,
-      );
+      await expect(
+        service.create({
+          fullName: 'Test User',
+          email: 'a@b.com',
+          password: 'secret',
+        }),
+      ).rejects.toThrow(ConflictException);
       expect(mockPrismaService.user.create).not.toHaveBeenCalled();
     });
   });
@@ -96,7 +117,9 @@ describe('UsersService', () => {
 
       const result = await service.findById('1');
 
-      expect(mockPrismaService.user.findUnique).toHaveBeenCalledWith({ where: { id: '1' } });
+      expect(mockPrismaService.user.findUnique).toHaveBeenCalledWith({
+        where: { id: '1' },
+      });
       expect(result).toEqual(user);
     });
 
