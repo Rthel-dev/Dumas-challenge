@@ -2,13 +2,7 @@ import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import {
-  faCheckCircle,
-  faClock,
-  faChartLine,
-  faEllipsisV,
-  faChevronDown,
-} from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle, faClock, faChartLine, faEllipsisV, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { TaskService } from '../../core/services/task.service';
 import { UserStoreService } from '../../core/services/user-store.service';
 import { Task } from '../../core/models/task.models';
@@ -35,7 +29,7 @@ export class TaskListComponent implements OnInit {
   activeTab = signal<TabFilter>('all');
   searchQuery = signal('');
   currentPage = signal(1);
-  pageSize = 5;
+  pageSize = 10;
 
   // Computed
   filteredTasks = computed(() => {

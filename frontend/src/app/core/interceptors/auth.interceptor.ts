@@ -8,8 +8,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const tokenService = inject(TokenService);
   const authService = inject(AuthService);
 
-  const isAuthEndpoint =
-    req.url.includes('/auth/login') || req.url.includes('/auth/register');
+  const isAuthEndpoint = req.url.includes('/auth/');
 
   const reqWithCreds = req.clone({ withCredentials: true });
   const token = tokenService.get();
