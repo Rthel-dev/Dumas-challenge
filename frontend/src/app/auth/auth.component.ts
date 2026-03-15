@@ -1,12 +1,12 @@
 import { Component, signal } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlertModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '../core/services/auth.service';
 
 @Component({
   selector: 'app-auth',
   standalone: true,
-  imports: [ReactiveFormsModule, NgbAlertModule],
+  imports: [ReactiveFormsModule, NgbAlertModule, NgbTooltipModule],
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.scss',
 })
