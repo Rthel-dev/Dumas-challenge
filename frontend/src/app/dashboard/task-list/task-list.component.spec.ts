@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideZonelessChangeDetection, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { EMPTY, of } from 'rxjs';
@@ -8,6 +8,7 @@ import { UserStoreService } from '../../core/services/user-store.service';
 
 describe('TaskListComponent', () => {
   let component: TaskListComponent;
+  let fixture: ComponentFixture<TaskListComponent>;
   let mockTaskService: { getAll: jasmine.Spy; update: jasmine.Spy; delete: jasmine.Spy };
   let mockUserStore: { currentUser: ReturnType<typeof signal>; loadProfile: jasmine.Spy; clear: jasmine.Spy };
   let mockRouter: jasmine.SpyObj<Router>;
@@ -35,7 +36,7 @@ describe('TaskListComponent', () => {
       ],
     }).compileComponents();
 
-    const fixture = TestBed.createComponent(TaskListComponent);
+    fixture = TestBed.createComponent(TaskListComponent);
     component = fixture.componentInstance;
   });
 
@@ -119,5 +120,35 @@ describe('TaskListComponent', () => {
     expect(component.completedCount()).toBe(2);
     expect(component.pendingCount()).toBe(1);
     expect(component.completionRate()).toBe(67);
+  });
+
+  describe('dueDate rendering in DOM', () => {
+    function getDateCell(): string {
+      fixture.detectChanges();
+      const row = fixture.nativeElement.querySelector('tbody tr');
+      const cells = row?.querySelectorAll('td');
+      return cells?.[2]?.textContent?.trim() ?? '';
+    }
+
+    it('renders midnight UTC date without timezone shift', () => {
+      component.tasks.set([
+        { id: '1', title: 'Task', dueDate: '2026-04-01T00:00:00.000Z', completed: false, userId: 'u1', createdAt: '', updatedAt: '' },
+      ]);
+      expect(getDateCell()).toBe('01 Apr 2026');
+    });
+
+    it('renders date-only string correctly', () => {
+      component.tasks.set([
+        { id: '1', title: 'Task', dueDate: '2026-04-01', completed: false, userId: 'u1', createdAt: '', updatedAt: '' },
+      ]);
+      expect(getDateCell()).toBe('01 Apr 2026');
+    });
+
+    it('renders empty when dueDate is null', () => {
+      component.tasks.set([
+        { id: '1', title: 'Task', dueDate: null, completed: false, userId: 'u1', createdAt: '', updatedAt: '' },
+      ]);
+      expect(getDateCell()).toBe('');
+    });
   });
 });
