@@ -1,14 +1,13 @@
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
-import { PrismaService } from '../../src/prisma/prisma.service';
+import { PrismaService } from '../src/prisma/prisma.service';
 import {
   createTestApp,
   cleanDatabase,
   closeTestApp,
 } from './helpers/test-app.helper';
-import * as bcrypt from 'bcrypt';
 
-describe('AuthController (integration)', () => {
+describe('AuthController (e2e)', () => {
   let app: INestApplication;
   let prisma: PrismaService;
 
@@ -24,12 +23,16 @@ describe('AuthController (integration)', () => {
     await closeTestApp(app);
   });
 
-  const validUser = { email: 'test@example.com', password: 'password123' };
+  const validUser = {
+    fullName: 'Test User',
+    email: 'test@example.com',
+    password: 'password123',
+  };
 
   // ─── POST /auth/register ────────────────────────────────────────────
 
   describe('POST /auth/register', () => {
-    it('201 → returns accessToken, userId, sets refresh_token cookie', async () => {
+    it('201 → returns accessToken, userId, sets dumas_tk cookie', async () => {
       const res = await request(app.getHttpServer())
         .post('/auth/register')
         .send(validUser)
@@ -42,7 +45,7 @@ describe('AuthController (integration)', () => {
 
       const cookies: string[] = res.headers['set-cookie'];
       expect(cookies).toBeDefined();
-      expect(cookies.some((c: string) => c.startsWith('refresh_token='))).toBe(
+      expect(cookies.some((c: string) => c.startsWith('dumas_tk='))).toBe(
         true,
       );
 
@@ -59,21 +62,28 @@ describe('AuthController (integration)', () => {
     it('400 → invalid email', async () => {
       await request(app.getHttpServer())
         .post('/auth/register')
-        .send({ email: 'not-an-email', password: 'password123' })
+        .send({ fullName: 'Test', email: 'not-an-email', password: 'password123' })
         .expect(400);
     });
 
     it('400 → missing password', async () => {
       await request(app.getHttpServer())
         .post('/auth/register')
-        .send({ email: 'test@example.com' })
+        .send({ fullName: 'Test', email: 'test@example.com' })
         .expect(400);
     });
 
     it('400 → password shorter than 6 characters', async () => {
       await request(app.getHttpServer())
         .post('/auth/register')
-        .send({ email: 'test@example.com', password: '12345' })
+        .send({ fullName: 'Test', email: 'test@example.com', password: '12345' })
+        .expect(400);
+    });
+
+    it('400 → missing fullName', async () => {
+      await request(app.getHttpServer())
+        .post('/auth/register')
+        .send({ email: 'test@example.com', password: 'password123' })
         .expect(400);
     });
 
@@ -97,17 +107,17 @@ describe('AuthController (integration)', () => {
       await request(app.getHttpServer()).post('/auth/register').send(validUser);
     });
 
-    it('200 → returns accessToken, userId, sets refresh_token cookie', async () => {
+    it('200 → returns accessToken, userId, sets dumas_tk cookie', async () => {
       const res = await request(app.getHttpServer())
         .post('/auth/login')
-        .send(validUser)
+        .send({ email: validUser.email, password: validUser.password })
         .expect(200);
 
       expect(res.body).toHaveProperty('accessToken');
       expect(res.body).toHaveProperty('userId');
 
       const cookies: string[] = res.headers['set-cookie'];
-      expect(cookies.some((c: string) => c.startsWith('refresh_token='))).toBe(
+      expect(cookies.some((c: string) => c.startsWith('dumas_tk='))).toBe(
         true,
       );
 
@@ -152,19 +162,17 @@ describe('AuthController (integration)', () => {
 
   describe('POST /auth/refresh', () => {
     let refreshCookie: string;
-    let accessToken: string;
     let userId: string;
 
     beforeEach(async () => {
       const res = await request(app.getHttpServer())
         .post('/auth/register')
         .send(validUser);
-      accessToken = res.body.accessToken;
       userId = res.body.userId;
 
       const cookies: string[] = res.headers['set-cookie'];
       refreshCookie = cookies.find((c: string) =>
-        c.startsWith('refresh_token='),
+        c.startsWith('dumas_tk='),
       )!;
     });
 
@@ -177,17 +185,16 @@ describe('AuthController (integration)', () => {
 
       const res = await request(app.getHttpServer())
         .post('/auth/refresh')
-        .set('Cookie', refreshCookie);
-      // .expect(200);
+        .set('Cookie', refreshCookie)
+        .expect(200);
 
-      expect(res.statusCode).toBe(200);
       expect(res.body).toHaveProperty('accessToken');
       expect(res.body).toHaveProperty('userId');
       expect(res.body.userId).toBe(userId);
 
       const newCookies: string[] = res.headers['set-cookie'];
       expect(
-        newCookies.some((c: string) => c.startsWith('refresh_token=')),
+        newCookies.some((c: string) => c.startsWith('dumas_tk=')),
       ).toBe(true);
 
       // Verify refreshToken rotated in DB
@@ -206,7 +213,7 @@ describe('AuthController (integration)', () => {
     it('401 → invalid JWT in cookie', async () => {
       await request(app.getHttpServer())
         .post('/auth/refresh')
-        .set('Cookie', 'refresh_token=invalid.jwt.token')
+        .set('Cookie', 'dumas_tk=invalid.jwt.token')
         .expect(401);
     });
   });
@@ -235,7 +242,7 @@ describe('AuthController (integration)', () => {
 
       // Verify cookie cleared
       const cookies: string[] = res.headers['set-cookie'];
-      expect(cookies.some((c: string) => c.includes('refresh_token=;'))).toBe(
+      expect(cookies.some((c: string) => c.includes('dumas_tk=;'))).toBe(
         true,
       );
 

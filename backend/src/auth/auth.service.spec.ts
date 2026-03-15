@@ -16,6 +16,7 @@ const mockUsersService = {
   create: jest.fn(),
   findByEmail: jest.fn(),
   findById: jest.fn(),
+  findByIdWithToken: jest.fn(),
   updateRefreshToken: jest.fn(),
 };
 
@@ -147,7 +148,7 @@ describe('AuthService', () => {
 
   describe('refresh', () => {
     it('throws UnauthorizedException if user not found', async () => {
-      mockUsersService.findById.mockResolvedValue(null);
+      mockUsersService.findByIdWithToken.mockResolvedValue(null);
 
       await expect(service.refresh('uid1', 'rawToken')).rejects.toThrow(
         UnauthorizedException,
@@ -155,7 +156,7 @@ describe('AuthService', () => {
     });
 
     it('throws UnauthorizedException if user.refreshToken is null (falsy)', async () => {
-      mockUsersService.findById.mockResolvedValue({
+      mockUsersService.findByIdWithToken.mockResolvedValue({
         id: 'uid1',
         refreshToken: null,
       });
@@ -166,7 +167,7 @@ describe('AuthService', () => {
     });
 
     it('throws UnauthorizedException if bcrypt.compare returns false', async () => {
-      mockUsersService.findById.mockResolvedValue({
+      mockUsersService.findByIdWithToken.mockResolvedValue({
         id: 'uid1',
         refreshToken: 'storedHash',
       });
@@ -178,7 +179,7 @@ describe('AuthService', () => {
     });
 
     it('returns new tokens on success', async () => {
-      mockUsersService.findById.mockResolvedValue({
+      mockUsersService.findByIdWithToken.mockResolvedValue({
         id: 'uid1',
         email: 'a@b.com',
         refreshToken: 'storedHash',

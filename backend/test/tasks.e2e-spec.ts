@@ -1,13 +1,13 @@
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
-import { PrismaService } from '../../src/prisma/prisma.service';
+import { PrismaService } from '../src/prisma/prisma.service';
 import {
   createTestApp,
   cleanDatabase,
   closeTestApp,
 } from './helpers/test-app.helper';
 
-describe('TasksController (integration)', () => {
+describe('TasksController (e2e)', () => {
   let app: INestApplication;
   let prisma: PrismaService;
 
@@ -23,8 +23,16 @@ describe('TasksController (integration)', () => {
     await closeTestApp(app);
   });
 
-  const validUser = { email: 'test@example.com', password: 'password123' };
-  const otherUser = { email: 'other@example.com', password: 'password123' };
+  const validUser = {
+    fullName: 'Test User',
+    email: 'test@example.com',
+    password: 'password123',
+  };
+  const otherUser = {
+    fullName: 'Other User',
+    email: 'other@example.com',
+    password: 'password123',
+  };
   const validTask = { title: 'Integration Task', dueDate: '2026-06-01' };
 
   async function registerAndGetToken(
@@ -85,6 +93,19 @@ describe('TasksController (integration)', () => {
       expect(res.body.completed).toBe(true);
     });
 
+    it('201 -> creates a task without dueDate', async () => {
+      const { accessToken } = await registerAndGetToken();
+
+      const res = await request(app.getHttpServer())
+        .post('/tasks')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send({ title: 'No date task' })
+        .expect(201);
+
+      expect(res.body.title).toBe('No date task');
+      expect(res.body.dueDate).toBeNull();
+    });
+
     it('400 -> missing title', async () => {
       const { accessToken } = await registerAndGetToken();
 
@@ -92,16 +113,6 @@ describe('TasksController (integration)', () => {
         .post('/tasks')
         .set('Authorization', `Bearer ${accessToken}`)
         .send({ dueDate: '2026-06-01' })
-        .expect(400);
-    });
-
-    it('400 -> missing dueDate', async () => {
-      const { accessToken } = await registerAndGetToken();
-
-      await request(app.getHttpServer())
-        .post('/tasks')
-        .set('Authorization', `Bearer ${accessToken}`)
-        .send({ title: 'No date' })
         .expect(400);
     });
 
@@ -158,6 +169,28 @@ describe('TasksController (integration)', () => {
       expect(res.body).toHaveLength(1);
       expect(res.body[0].title).toBe('User1 Task');
       expect(res.body[0].userId).toBe(user1.userId);
+    });
+
+    it('200 -> returns tasks ordered by id desc', async () => {
+      const { accessToken } = await registerAndGetToken();
+
+      const t1 = await createTask(accessToken, { title: 'First', dueDate: '2026-01-01' });
+      const t2 = await createTask(accessToken, { title: 'Second', dueDate: '2026-02-01' });
+      const t3 = await createTask(accessToken, { title: 'Third', dueDate: '2026-03-01' });
+
+      const createdIds = [t1, t2, t3]
+        .map((t: any) => t.id)
+        .sort((a: string, b: string) => b.localeCompare(a));
+
+      const res = await request(app.getHttpServer())
+        .get('/tasks')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .expect(200);
+
+      expect(res.body).toHaveLength(3);
+
+      const returnedIds = res.body.map((t: any) => t.id);
+      expect(returnedIds).toEqual(createdIds);
     });
 
     it('401 -> no Authorization header', async () => {

@@ -67,6 +67,10 @@ Para ejecutar las pruebas automatizadas del proyecto, ejecutar el siguiente coma
 ```
 npm run test
 ```
+Para ejecutar las pruebas con reporte de cobertura:
+```
+npm run test:cov
+```
 Para realizar pruebas puntuales sobre un grupo de componentes o un directorio, se deben ejecutar mediante el comando __ng__ de *Angular* de la siguiente forma:
 ```
 ng test --include=src/app/directorio_objetivo
