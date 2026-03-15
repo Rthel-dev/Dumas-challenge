@@ -55,7 +55,7 @@ $text-muted-custom: #64748b;
 .task-table-card {
   border-radius: 12px;
   border-color: $border-color;
-  overflow: hidden;
+  overflow: visible;
 
   .card-header {
     padding: 16px 24px;
