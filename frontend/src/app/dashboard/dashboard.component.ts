@@ -21,6 +21,10 @@ import { UserStoreService } from '../core/services/user-store.service';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
+/**
+ * Componente contenedor del panel principal (layout con sidebar y header).
+ * Muestra el nombre del usuario y provee navegacion y logout.
+ */
 export class DashboardComponent {
   // Icons
   faSearch = faSearch;
