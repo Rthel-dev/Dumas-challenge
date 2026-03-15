@@ -45,6 +45,7 @@ npx jest src/path/to/file.spec.ts
 npm start             # Dev server on port 4200 (ng serve)
 npm run build         # Production build to dist/
 npm test              # Unit tests (Karma + Jasmine)
+npm run test:cov      # Coverage report (headless Chrome)
 npm run watch         # Watch mode build
 ```
 
