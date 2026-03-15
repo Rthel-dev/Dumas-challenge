@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { provideZonelessChangeDetection, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { EMPTY, of } from 'rxjs';
 import { TaskListComponent } from './task-list.component';
 import { TaskService } from '../../core/services/task.service';
@@ -9,6 +10,7 @@ describe('TaskListComponent', () => {
   let component: TaskListComponent;
   let mockTaskService: { getAll: jasmine.Spy; update: jasmine.Spy; delete: jasmine.Spy };
   let mockUserStore: { currentUser: ReturnType<typeof signal>; loadProfile: jasmine.Spy; clear: jasmine.Spy };
+  let mockRouter: jasmine.SpyObj<Router>;
 
   beforeEach(async () => {
     mockTaskService = {
@@ -21,6 +23,7 @@ describe('TaskListComponent', () => {
       loadProfile: jasmine.createSpy(),
       clear: jasmine.createSpy(),
     };
+    mockRouter = jasmine.createSpyObj('Router', ['navigate']);
 
     await TestBed.configureTestingModule({
       imports: [TaskListComponent],
@@ -28,6 +31,7 @@ describe('TaskListComponent', () => {
         provideZonelessChangeDetection(),
         { provide: TaskService, useValue: mockTaskService },
         { provide: UserStoreService, useValue: mockUserStore },
+        { provide: Router, useValue: mockRouter },
       ],
     }).compileComponents();
 
@@ -97,6 +101,12 @@ describe('TaskListComponent', () => {
     component.deleteTask(task);
     expect(mockTaskService.delete).toHaveBeenCalledWith('1');
     expect(component.tasks().length).toBe(0);
+  });
+
+  it('editTask navigates to /dashboard/edit/:id', () => {
+    const task = { id: 'abc-123', title: 'Task', dueDate: '2026-04-01', completed: false, userId: 'u1', createdAt: '', updatedAt: '' };
+    component.editTask(task);
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['/dashboard/edit', 'abc-123']);
   });
 
   it('computed stats are correct', () => {

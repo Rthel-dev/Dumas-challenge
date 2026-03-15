@@ -132,7 +132,18 @@
                   <fa-icon [icon]="faEllipsisV"></fa-icon>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end">
-                  <li><button class="dropdown-item text-danger" (click)="deleteTask(task)">Eliminar</button></li>
+                  <li>
+                    <button class="dropdown-item d-flex align-items-center gap-2" (click)="editTask(task)">
+                      <fa-icon [icon]="faPenToSquare"></fa-icon>
+                      Actualizar
+                    </button>
+                  </li>
+                  <li>
+                    <button class="dropdown-item text-danger d-flex align-items-center gap-2" (click)="deleteTask(task)">
+                      <fa-icon [icon]="faTrashCan"></fa-icon>
+                      Eliminar
+                    </button>
+                  </li>
                 </ul>
               </div>
             </td>
