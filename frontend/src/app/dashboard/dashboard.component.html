@@ -18,7 +18,7 @@
         <fa-icon [icon]="faTasks" class="nav-icon"></fa-icon>
         <span>Mis Tareas</span>
       </a>
-      <a class="nav-item" href="javascript:void(0)">
+      <a class="nav-item" href="javascript:void(0)" ngbTooltip="Pendiente de desarrollo..." placement="bottom">
         <fa-icon [icon]="faCog" class="nav-icon"></fa-icon>
         <span>Configuración</span>
       </a>
@@ -49,11 +49,11 @@
         <span class="text-muted fw-semibold" style="font-size: 14px;">Panel de Tareas</span>
       </div>
       <div class="d-flex align-items-center gap-3">
-        <button class="btn btn-link text-muted position-relative p-0">
+        <button class="btn btn-link text-muted position-relative p-0" ngbTooltip="Pendiente de desarrollo..." placement="bottom">
           <fa-icon [icon]="faBell"></fa-icon>
           <span class="notification-dot"></span>
         </button>
-        <button class="btn btn-link text-muted p-0">
+        <button class="btn btn-link text-muted p-0" ngbTooltip="Pendiente de desarrollo..." placement="bottom">
           <fa-icon [icon]="faCog"></fa-icon>
         </button>
         <div class="vr mx-2"></div>

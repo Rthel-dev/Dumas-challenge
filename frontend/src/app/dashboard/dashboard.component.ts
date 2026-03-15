@@ -10,13 +10,14 @@ import {
   faCheckCircle,
   faSignOutAlt,
 } from '@fortawesome/free-solid-svg-icons';
+import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '../core/services/auth.service';
 import { UserStoreService } from '../core/services/user-store.service';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, FontAwesomeModule],
+  imports: [RouterOutlet, RouterLink, FontAwesomeModule, NgbTooltipModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
