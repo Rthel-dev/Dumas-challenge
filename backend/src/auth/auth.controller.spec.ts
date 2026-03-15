@@ -55,9 +55,9 @@ describe('AuthController', () => {
 
       expect(mockAuthService.register).toHaveBeenCalledWith({ fullName: 'Test User', email: 'a@b.com', password: 'pw' });
       expect(mockRes.cookie).toHaveBeenCalledWith(
-        'refresh_token',
+        'dumas_tk',
         'refresh',
-        expect.objectContaining({ httpOnly: true, path: '/auth/refresh' }),
+        expect.objectContaining({ httpOnly: true, path: '/' }),
       );
       expect(result).toEqual({ accessToken: 'access', userId: 'uid1' });
       expect(result).not.toHaveProperty('refreshToken');
@@ -76,9 +76,9 @@ describe('AuthController', () => {
 
       expect(mockAuthService.login).toHaveBeenCalledWith({ email: 'a@b.com', password: 'pw' });
       expect(mockRes.cookie).toHaveBeenCalledWith(
-        'refresh_token',
+        'dumas_tk',
         'refresh',
-        expect.objectContaining({ httpOnly: true, path: '/auth/refresh' }),
+        expect.objectContaining({ httpOnly: true, path: '/' }),
       );
       expect(result).toEqual({ accessToken: 'access', userId: 'uid1' });
     });
@@ -105,7 +105,7 @@ describe('AuthController', () => {
       mockConfigService.get.mockImplementation((key: string) =>
         key === 'JWT_REFRESH_SECRET' ? 'refresh-secret' : 'false',
       );
-      const req = { cookies: { refresh_token: 'rawToken' } } as any;
+      const req = { cookies: { dumas_tk: 'rawToken' } } as any;
       mockJwtService.verifyAsync.mockResolvedValue({ sub: 'uid1' });
       mockAuthService.refresh.mockResolvedValue({
         accessToken: 'newAccess',
@@ -118,15 +118,15 @@ describe('AuthController', () => {
       expect(mockJwtService.verifyAsync).toHaveBeenCalledWith('rawToken', { secret: 'refresh-secret' });
       expect(mockAuthService.refresh).toHaveBeenCalledWith('uid1', 'rawToken');
       expect(mockRes.cookie).toHaveBeenCalledWith(
-        'refresh_token',
+        'dumas_tk',
         'newRefresh',
-        expect.objectContaining({ httpOnly: true, path: '/auth/refresh' }),
+        expect.objectContaining({ httpOnly: true, path: '/' }),
       );
       expect(result).toEqual({ accessToken: 'newAccess', userId: 'uid1' });
     });
 
     it('throws UnauthorizedException with correct message when verifyAsync rejects', async () => {
-      const req = { cookies: { refresh_token: 'badToken' } } as any;
+      const req = { cookies: { dumas_tk: 'badToken' } } as any;
       mockJwtService.verifyAsync.mockRejectedValue(new Error('expired'));
 
       await expect(controller.refresh(req, mockRes as any)).rejects.toThrow(
@@ -143,8 +143,8 @@ describe('AuthController', () => {
 
       expect(mockAuthService.logout).toHaveBeenCalledWith('uid1');
       expect(mockRes.clearCookie).toHaveBeenCalledWith(
-        'refresh_token',
-        expect.objectContaining({ path: '/auth/refresh' }),
+        'dumas_tk',
+        expect.objectContaining({ path: '/' }),
       );
       expect(result).toEqual({ message: 'Logged out successfully' });
     });
