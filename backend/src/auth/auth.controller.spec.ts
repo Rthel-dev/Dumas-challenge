@@ -51,9 +51,16 @@ describe('AuthController', () => {
         userId: 'uid1',
       });
 
-      const result = await controller.register({ fullName: 'Test User', email: 'a@b.com', password: 'pw' }, mockRes as any);
+      const result = await controller.register(
+        { fullName: 'Test User', email: 'a@b.com', password: 'pw' },
+        mockRes as any,
+      );
 
-      expect(mockAuthService.register).toHaveBeenCalledWith({ fullName: 'Test User', email: 'a@b.com', password: 'pw' });
+      expect(mockAuthService.register).toHaveBeenCalledWith({
+        fullName: 'Test User',
+        email: 'a@b.com',
+        password: 'pw',
+      });
       expect(mockRes.cookie).toHaveBeenCalledWith(
         'dumas_tk',
         'refresh',
@@ -72,9 +79,15 @@ describe('AuthController', () => {
         userId: 'uid1',
       });
 
-      const result = await controller.login({ email: 'a@b.com', password: 'pw' }, mockRes as any);
+      const result = await controller.login(
+        { email: 'a@b.com', password: 'pw' },
+        mockRes as any,
+      );
 
-      expect(mockAuthService.login).toHaveBeenCalledWith({ email: 'a@b.com', password: 'pw' });
+      expect(mockAuthService.login).toHaveBeenCalledWith({
+        email: 'a@b.com',
+        password: 'pw',
+      });
       expect(mockRes.cookie).toHaveBeenCalledWith(
         'dumas_tk',
         'refresh',
@@ -84,11 +97,16 @@ describe('AuthController', () => {
     });
 
     it('propagates UnauthorizedException from authService', async () => {
-      mockAuthService.login.mockRejectedValue(new UnauthorizedException('Invalid credentials'));
-
-      await expect(controller.login({ email: 'a@b.com', password: 'wrong' }, mockRes as any)).rejects.toThrow(
-        UnauthorizedException,
+      mockAuthService.login.mockRejectedValue(
+        new UnauthorizedException('Invalid credentials'),
       );
+
+      await expect(
+        controller.login(
+          { email: 'a@b.com', password: 'wrong' },
+          mockRes as any,
+        ),
+      ).rejects.toThrow(UnauthorizedException);
     });
   });
 
@@ -115,7 +133,9 @@ describe('AuthController', () => {
 
       const result = await controller.refresh(req, mockRes as any);
 
-      expect(mockJwtService.verifyAsync).toHaveBeenCalledWith('rawToken', { secret: 'refresh-secret' });
+      expect(mockJwtService.verifyAsync).toHaveBeenCalledWith('rawToken', {
+        secret: 'refresh-secret',
+      });
       expect(mockAuthService.refresh).toHaveBeenCalledWith('uid1', 'rawToken');
       expect(mockRes.cookie).toHaveBeenCalledWith(
         'dumas_tk',

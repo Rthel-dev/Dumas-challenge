@@ -4,6 +4,12 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { routes } from './app.routes';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 
+/**
+ * Configuracion global de la aplicacion Angular.
+ *
+ * Provee: deteccion de cambios zoneless, enrutamiento,
+ * cliente HTTP con interceptor de autenticacion.
+ */
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),

@@ -5,6 +5,16 @@ import { TaskListComponent } from './dashboard/task-list/task-list.component';
 import { TaskFormComponent } from './dashboard/task-form/task-form.component';
 import { authGuard } from './core/guards/auth.guard';
 
+/**
+ * Definicion de rutas de la aplicacion.
+ *
+ * - `/auth` — Pagina de login/registro.
+ * - `/dashboard` — Panel principal (protegido por {@link authGuard}).
+ *   - `/dashboard` — Lista de tareas.
+ *   - `/dashboard/new` — Formulario de creacion.
+ *   - `/dashboard/edit/:id` — Formulario de edicion.
+ * - Rutas no encontradas redirigen a `/auth`.
+ */
 export const routes: Routes = [
   { path: 'auth', component: AuthComponent },
   {

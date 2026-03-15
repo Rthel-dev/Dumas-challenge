@@ -16,7 +16,11 @@ describe('UsersController', () => {
   let controller: UsersController;
 
   const userId = 'user-1';
-  const mockProfile = { id: userId, fullName: 'Test User', email: 'test@example.com' };
+  const mockProfile = {
+    id: userId,
+    fullName: 'Test User',
+    email: 'test@example.com',
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({

@@ -7,10 +7,18 @@ import { TokenService } from './token.service';
 import { UserStoreService } from './user-store.service';
 import { AuthResponse, LoginRequest, RegisterRequest } from '../models/auth.models';
 
+/**
+ * Servicio de autenticacion del frontend.
+ *
+ * Gestiona login, registro, refresh de tokens y logout.
+ * Tras autenticacion exitosa, almacena el token, carga el perfil
+ * y navega al dashboard.
+ */
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly api = environment.apiUrl;
 
+  /** Signal con el ID del usuario actualmente autenticado. */
   currentUserId = signal<string | null>(null);
 
   constructor(
@@ -20,6 +28,13 @@ export class AuthService {
     private router: Router,
   ) {}
 
+  /**
+   * Inicia sesion con las credenciales proporcionadas.
+   * Almacena el token, carga el perfil y redirige al dashboard.
+   *
+   * @param dto - Credenciales de login (email y contrasena).
+   * @returns Observable con la respuesta de autenticacion.
+   */
   login(dto: LoginRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.api}/auth/login`, dto).pipe(
       tap((res) => {
@@ -31,6 +46,13 @@ export class AuthService {
     );
   }
 
+  /**
+   * Registra un nuevo usuario.
+   * Almacena el token, carga el perfil y redirige al dashboard.
+   *
+   * @param dto - Datos de registro (nombre, email, contrasena).
+   * @returns Observable con la respuesta de autenticacion.
+   */
   register(dto: RegisterRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.api}/auth/register`, dto).pipe(
       tap((res) => {
@@ -42,6 +64,11 @@ export class AuthService {
     );
   }
 
+  /**
+   * Renueva el access token usando la cookie de refresh token.
+   *
+   * @returns Observable que emite el nuevo access token.
+   */
   refresh(): Observable<string> {
     return this.http
       .post<AuthResponse>(`${this.api}/auth/refresh`, {}, { withCredentials: true })
@@ -51,6 +78,10 @@ export class AuthService {
       );
   }
 
+  /**
+   * Cierra la sesion: notifica al servidor, limpia el token y el perfil,
+   * y navega a la pagina de autenticacion.
+   */
   logout(): void {
     const token = this.tokenService.get();
     const headers: Record<string, string> = token

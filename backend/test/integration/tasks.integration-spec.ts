@@ -202,9 +202,7 @@ describe('TasksController (integration)', () => {
     });
 
     it('401 -> no Authorization header', async () => {
-      await request(app.getHttpServer())
-        .get('/tasks/some-id')
-        .expect(401);
+      await request(app.getHttpServer()).get('/tasks/some-id').expect(401);
     });
   });
 
@@ -324,9 +322,7 @@ describe('TasksController (integration)', () => {
     });
 
     it('401 -> no Authorization header', async () => {
-      await request(app.getHttpServer())
-        .delete('/tasks/some-id')
-        .expect(401);
+      await request(app.getHttpServer()).delete('/tasks/some-id').expect(401);
     });
   });
 });
