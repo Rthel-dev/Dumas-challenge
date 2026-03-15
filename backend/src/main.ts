@@ -28,7 +28,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Dumas Task API')
     .setDescription('The REST API for Dumas Task app')
-    .setVersion('0.0.1')
+    .setVersion('0.1.0')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
