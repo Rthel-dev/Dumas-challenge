@@ -1,13 +1,13 @@
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
-import { PrismaService } from '../../src/prisma/prisma.service';
+import { PrismaService } from '../src/prisma/prisma.service';
 import {
   createTestApp,
   cleanDatabase,
   closeTestApp,
 } from './helpers/test-app.helper';
 
-describe('AppController (integration)', () => {
+describe('AppController (e2e)', () => {
   let app: INestApplication;
   let prisma: PrismaService;
 
@@ -23,10 +23,10 @@ describe('AppController (integration)', () => {
     await closeTestApp(app);
   });
 
-  it('GET / → 200 "Hello World!"', () => {
-    return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!');
+  it('app initializes and validation pipeline is active', async () => {
+    await request(app.getHttpServer())
+      .post('/auth/login')
+      .send({})
+      .expect(400);
   });
 });

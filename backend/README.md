@@ -127,7 +127,7 @@ La aplicación estará disponible en `http://localhost:3000` y la documentación
 |--------|------|-------------|---------------|
 | POST | `/auth/register` | Registrar nuevo usuario | No |
 | POST | `/auth/login` | Iniciar sesión | No |
-| POST | `/auth/refresh` | Renovar access token | No (usa cookie refresh_token) |
+| POST | `/auth/refresh` | Renovar access token | No (usa cookie dumas_tk) |
 | POST | `/auth/logout` | Cerrar sesión | Sí |
 
 ### Users (`/users`)
@@ -143,6 +143,20 @@ La aplicación estará disponible en `http://localhost:3000` y la documentación
 | GET | `/tasks/:id` | Obtener tarea por ID | Sí |
 | PATCH | `/tasks/:id` | Actualizar tarea | Sí |
 | DELETE | `/tasks/:id` | Eliminar tarea | Sí |
+
+## Tests
+Ejecutar tests unitarios:
+```
+npm test
+```
+Ejecutar tests con reporte de cobertura:
+```
+npm run test:cov
+```
+Ejecutar tests e2e:
+```
+npm run test:e2e
+```
 
 ## Desplegar en producción (instalación directa en servidor)
 
@@ -207,18 +221,4 @@ npm install -g pm2
 pm2 start dist/src/main.js --name dumas-api
 pm2 save
 pm2 startup
-```
-
-## Tests
-Ejecutar tests unitarios:
-```
-npm test
-```
-Ejecutar tests con reporte de cobertura:
-```
-npm run test:cov
-```
-Ejecutar tests de integración:
-```
-npm run test:integration
 ```
